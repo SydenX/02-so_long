@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtollena <jtollena@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 21:42:29 by jtollena          #+#    #+#             */
-/*   Updated: 2023/10/15 21:42:31 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/01 11:16:38 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strdup(const char *s)
 	char	*copy;
 	int		i;
 
+	if (!s)
+		return (NULL);
 	copy = malloc((ft_strlen(s) + 1) * sizeof(char));
 	if (copy == NULL)
 		return (NULL);

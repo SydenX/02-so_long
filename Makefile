@@ -6,7 +6,7 @@
 #    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/11/30 15:09:29 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/01 11:19:23 by jtollena         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ INCLUDES = includes
 FLAGS = #-Wall -Wextra #-Werror
 LINKS = -I libft -L libft \
     -I /usr/local/include -L /usr/local/lib \
-    -l mlx -l ft -framework OpenGL -framework Appkit
+    -l mlx -l ft -l ftprintf -framework OpenGL -framework Appkit
 
 # Remember to implement your rules...
 

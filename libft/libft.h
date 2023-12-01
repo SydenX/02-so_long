@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 21:46:55 by jtollena          #+#    #+#             */
-/*   Updated: 2023/10/23 13:03:57 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/01 11:17:01 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
+# include <stdarg.h>
 
 typedef struct s_list
 {
@@ -68,5 +69,12 @@ void	ft_lstadd_back(t_list **list, t_list *new);
 void	ft_lstdelone(t_list *lst, void (*del)(void *));
 void	ft_lstclear(t_list **lst, void (*del)(void *));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
+
+int		ft_printf(const char *type, ...);
+int		ft_putstr(int current, char *s);
+int		ft_putnbr(int current, int n, char flag);
+int		ft_putunbr(int current, unsigned int n);
+int		ft_putchar(int current, char c);
+int		ft_putnbr_base(int current, size_t nbr, int maj, char flag);
 
 #endif

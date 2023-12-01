@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/01 11:30:32 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/01 13:37:30 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@
 # include "keymap.h"
 # include "mlx.h"
 # include "libft.h"
+# include <stdlib.h>
+# include <string.h>
+# include <fcntl.h>
 
+# define SIZE 16
 
 int 	rgb_to_hex(int red, int green, int blue);
 

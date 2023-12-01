@@ -6,7 +6,7 @@
 #    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/01 11:19:23 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/01 16:13:48 by jtollena         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,3 +39,5 @@ fclean: clean
 	rm $(NAME)
 
 re: fclean $(NAME)
+
+.PHONY: re fclean clean

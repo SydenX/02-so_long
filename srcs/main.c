@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/01 14:00:20 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/01 14:14:35 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void exit_error(char *error, t_prog *prog)
     exit(0);
 }
 
+// Perfoming checks on file, is file readable? Is map surrunded by walls? Are each line at the same size?
 int read_map(char *path)
 {
     int fd = open(path, O_RDONLY, 0);
@@ -47,17 +48,23 @@ int read_map(char *path)
     int firstln = 0;
     int lineln = 0;
     int newlineln = 0;
+    char    *lastline;
     while (readable > 0)
     {
         readable = read(fd, reader, 1);
         if (readable == -1)
             exit_error("Error while reading the input file.", NULL);
-        if (readable > 0 && (reader[0] == '1' || reader[0] == '0'))
+        if (readable > 0 && (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E'))
         {
-            if (firstln == 0)
+            if (firstln == 0){
                 lineln++;
+                lastline = malloc((lineln + 1) * sizeof(char));
+                if (lastline == NULL)
+                    exit_error("Memory allocation error.", NULL);
+                lastline[lineln] = 0;
+            } else
+                lastline[newlineln] = reader[0];
             newlineln++;
-            ft_printf("%d, %d\n", lineln, newlineln);
         }
         if (reader[0] == '\n' || readable == 0){
             firstln++;
@@ -67,15 +74,29 @@ int read_map(char *path)
             if (readable == 0)
                 break;
         }
-        else if (reader[0] == '1')
-            ft_printf("");
+        if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1')
+            || (newlineln == lineln && reader[0] != '1'))
+            exit_error("Error, file is not correctly formatted, map must be surrounded by walls.", NULL);
+        if (reader[0] == '1')
+            ft_printf("W");
         else if (reader[0] == '0')
-            ft_printf("");
+            ft_printf(" ");
+        else if (reader[0] == 'P')
+            ft_printf("S");
+        else if (reader[0] == 'E')
+            ft_printf("E");
         else if (reader[0] == '\n')
-            ft_printf("");
+            ft_printf("\n");
         else
             exit_error("Error, file is not correctly formatted.", NULL);
     }
+    int i2 = 0;
+    while (lastline[i2] != 0)
+    {
+        if (lastline[i2++] != '1')
+            exit_error("Error, file is not correctly formatted, map must be surrounded by walls.", NULL);
+    }
+    free(lastline);
     ft_printf("\n");
     return (1);
 }

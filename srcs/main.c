@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/01 16:16:08 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/01 16:26:04 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int read_map(char *path)
     int lineln = 0;
     int newlineln = 0;
     char    *lastline;
-    int needs[3];
+    int needs[3]; needs[0] = 0; needs[1] = 0;needs[2] = 0;
     while (readable > 0)
     {
         readable = read(fd, reader, 1);
@@ -124,6 +124,7 @@ int read_map(char *path)
         }
     }
     free(lastline);
+    ft_printf("%d %d %d", needs[0], needs[1], needs[2]);
     if (needs[0] != 1 || needs[1] != 1 || needs[2] < 1)
         exit_error("Error, your map doesn't contains the minimals interest points.", NULL);
     ft_printf("\n");
@@ -139,32 +140,32 @@ int main(int argc, char **argv)
     prog.mlx = mlx_init();
     if (prog.mlx == NULL)
         return (0);
-    prog.win = mlx_new_window(prog.mlx, 1920/4, 1080/4, "test");
-    if (prog.mlx == NULL)
-        return (0);
+    // prog.win = mlx_new_window(prog.mlx, 1920/4, 1080/4, "test");
+    // if (prog.mlx == NULL)
+    //     return (0);
 
-    mlx_key_hook(prog.win, close_window, &prog);
-    int img_width;
-    int img_height;
-    void *imgFloor = mlx_xpm_file_to_image(prog.mlx, "img/grass.xpm", &img_width, &img_height);
-    void *imgWallUp = mlx_xpm_file_to_image(prog.mlx, "img/wall_up.xpm", &img_width, &img_height);
-    if (imgFloor == NULL || imgWallUp == NULL)
-        return (close_window(KEY_ESCAPE, &prog), 0);
-    int i = 0;
-    int j = -SIZE;
-    int line = 0;
-    while (i < argc)
-    {
-        if (argv[i][0] == 'n'){
-            line += SIZE;
-            j = -SIZE;  
-        } else if (argv[i][0] == 'X')
-            mlx_put_image_to_window(prog.mlx, prog.win, imgWallUp, j, line);
-        else if (argv[i][0] == '0')
-            mlx_put_image_to_window(prog.mlx, prog.win, imgFloor, j, line);
-        j += SIZE;
-        i++;
-    }
+    // mlx_key_hook(prog.win, close_window, &prog);
+    // int img_width;
+    // int img_height;
+    // void *imgFloor = mlx_xpm_file_to_image(prog.mlx, "img/grass.xpm", &img_width, &img_height);
+    // void *imgWallUp = mlx_xpm_file_to_image(prog.mlx, "img/wall_up.xpm", &img_width, &img_height);
+    // if (imgFloor == NULL || imgWallUp == NULL)
+    //     return (close_window(KEY_ESCAPE, &prog), 0);
+    // int i = 0;
+    // int j = -SIZE;
+    // int line = 0;
+    // while (i < argc)
+    // {
+    //     if (argv[i][0] == 'n'){
+    //         line += SIZE;
+    //         j = -SIZE;  
+    //     } else if (argv[i][0] == 'X')
+    //         mlx_put_image_to_window(prog.mlx, prog.win, imgWallUp, j, line);
+    //     else if (argv[i][0] == '0')
+    //         mlx_put_image_to_window(prog.mlx, prog.win, imgFloor, j, line);
+    //     j += SIZE;
+    //     i++;
+    // }
     
     // listening to any events
     mlx_loop(prog.mlx);

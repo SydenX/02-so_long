@@ -11,6 +11,18 @@
 /* ************************************************************************** */
 
 #include "head.h"
+/* IDEAS- Faire un pathfinding A*
+*  Lors de la lecture du fichier, créer une structure "node" qui contient ses coordonneés X et Y, ainsi que son type (mur, sol, point de départ, etc..), avec la donnée H de l'algo (Distance par rapport a la sortie), G = 0 et F = H
+*  Mettre chaque élément créé (node) dans une liste de node
+*  Ensuite on va pouvoir lire cette liste pour trouver les points que l'on souhaite, on va pouvoir créer notre algo.
+*  H = Distance a vol d'oiseau vers la sortie, G = Distance réelle parcourue jusque ce point, F = Addition de H + G
+*  A chaque node, on va check toutes les nodes autour de celle actuelle (current), on va check si la node est accéssible (elle ne doit pas etre la meme que la current et elle ne doit pas etre un mur)
+*  Ensuite on calcule le G et le F de cette node,
+*  On va alors pouvoir changer la node current avec la node qui a le plus petit F
+*  A chaque avancée on doit inscrire la node current dans une liste (bonus lst de la libft) seulement si il y a un croisement a celle ci (cad 2 chemins possibles),
+*  Si on tombe sur un mur, cela va nous permettre de stopper la progression et de repartir sur la derniere node ou il y a un croisement.
+*  
+*/
 
 int close_window(int keycode, t_prog *prog)
 {

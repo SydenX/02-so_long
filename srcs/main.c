@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/01 16:26:04 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/04 11:45:05 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,13 @@ int read_map(char *path)
         {
             if (firstln == 0){
                 lineln++;
-                lastline = malloc((lineln + 1) * sizeof(char));
-                if (lastline == NULL)
-                    exit_error("Memory allocation error.", NULL);
-                lastline[lineln] = 0;
+                if (lineln == 1)
+                {
+                    lastline = malloc((lineln + 1) * sizeof(char));
+                    if (lastline == NULL)
+                        exit_error("Memory allocation error.", NULL);
+                    lastline[lineln] = 0;
+                }
             } else
                 lastline[newlineln] = reader[0];
             newlineln++;
@@ -90,8 +93,7 @@ int read_map(char *path)
             if (readable == 0)
                 break;
         }
-        if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1')
-            || (newlineln == lineln && reader[0] != '1'))
+        if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))
         {
             free(lastline);
             exit_error("Error, file is not correctly formatted, map must be surrounded by walls.", NULL);
@@ -140,32 +142,32 @@ int main(int argc, char **argv)
     prog.mlx = mlx_init();
     if (prog.mlx == NULL)
         return (0);
-    // prog.win = mlx_new_window(prog.mlx, 1920/4, 1080/4, "test");
-    // if (prog.mlx == NULL)
-    //     return (0);
+    prog.win = mlx_new_window(prog.mlx, 1920/4, 1080/4, "test");
+    if (prog.mlx == NULL)
+        return (0);
 
-    // mlx_key_hook(prog.win, close_window, &prog);
-    // int img_width;
-    // int img_height;
-    // void *imgFloor = mlx_xpm_file_to_image(prog.mlx, "img/grass.xpm", &img_width, &img_height);
-    // void *imgWallUp = mlx_xpm_file_to_image(prog.mlx, "img/wall_up.xpm", &img_width, &img_height);
-    // if (imgFloor == NULL || imgWallUp == NULL)
-    //     return (close_window(KEY_ESCAPE, &prog), 0);
-    // int i = 0;
-    // int j = -SIZE;
-    // int line = 0;
-    // while (i < argc)
-    // {
-    //     if (argv[i][0] == 'n'){
-    //         line += SIZE;
-    //         j = -SIZE;  
-    //     } else if (argv[i][0] == 'X')
-    //         mlx_put_image_to_window(prog.mlx, prog.win, imgWallUp, j, line);
-    //     else if (argv[i][0] == '0')
-    //         mlx_put_image_to_window(prog.mlx, prog.win, imgFloor, j, line);
-    //     j += SIZE;
-    //     i++;
-    // }
+    mlx_key_hook(prog.win, close_window, &prog);
+    int img_width;
+    int img_height;
+    void *imgFloor = mlx_xpm_file_to_image(prog.mlx, "img/grass.xpm", &img_width, &img_height);
+    void *imgWallUp = mlx_xpm_file_to_image(prog.mlx, "img/wall_up.xpm", &img_width, &img_height);
+    if (imgFloor == NULL || imgWallUp == NULL)
+        return (close_window(KEY_ESCAPE, &prog), 0);
+    int i = 0;
+    int j = -SIZE;
+    int line = 0;
+    while (i < argc)
+    {
+        if (argv[i][0] == 'n'){
+            line += SIZE;
+            j = -SIZE;  
+        } else if (argv[i][0] == 'X')
+            mlx_put_image_to_window(prog.mlx, prog.win, imgWallUp, j, line);
+        else if (argv[i][0] == '0')
+            mlx_put_image_to_window(prog.mlx, prog.win, imgFloor, j, line);
+        j += SIZE;
+        i++;
+    }
     
     // listening to any events
     mlx_loop(prog.mlx);

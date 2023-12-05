@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/01 13:37:30 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 11:35:03 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,25 @@
 
 # define SIZE 16
 
-int 	rgb_to_hex(int red, int green, int blue);
+int		rgb_to_hex(int red, int green, int blue);
+
+typedef enum e_type {
+	FLOOR,
+	WALL,
+}	t_type;
 
 typedef struct s_prog {
-	void *mlx;
-	void *win;
+	void	*mlx;
+	void	*win;
 }	t_prog;
+
+typedef struct s_node {
+	int		x;
+	int		y;
+	int		h;
+	int		g;
+	int		f;
+	t_type	type;
+}	t_node;
 
 #endif

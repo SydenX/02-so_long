@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 17:15:13 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:19:12 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 *  
 */
 
-int close_window(int keycode, t_prog *prog)
+int	close_window(int keycode, t_prog *prog)
 {
 	if (keycode == KEY_ESCAPE)
 	{
@@ -35,11 +35,12 @@ int close_window(int keycode, t_prog *prog)
 	return (1);
 }
 
-void exit_error(char *error, t_prog *prog)
+void	exit_error(char *error, t_prog *prog)
 {
 	if (prog != NULL)
 	{
-		if (prog->mlx != NULL && prog->win != NULL){
+		if (prog->mlx != NULL && prog->win != NULL)
+		{
 			mlx_clear_window(prog->mlx, prog->win);
 			mlx_destroy_window(prog->mlx, prog->win);
 		}
@@ -58,10 +59,8 @@ TODO Handling the right error message as specified in the subject
 
 */
 
-void    error_inputfile(char *lastline)
+void	error_inputfile(void)
 {
-	if (lastline)
-		free(lastline);
 	exit_error("Error while reading the input file.", NULL);
 }
 
@@ -91,7 +90,7 @@ t_node	create_node(char name)
 	return (new);
 }
 
-int node_size(char *path)
+int	node_size(char *path)
 {
 	char	reader[1];
 	int		readable;
@@ -108,7 +107,8 @@ int node_size(char *path)
 		readable = read(fd, reader, 1);
 		if (readable == -1)
 			error_inputfile(NULL);
-		if (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C')
+		if (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P'
+			|| reader[0] == 'E' || reader[0] == 'C')
 			wc++;
 		else if (reader[0] != '\n' && reader[0] != 0)
 			error_notformatted(NULL);
@@ -117,7 +117,7 @@ int node_size(char *path)
 	return (wc + 1);
 }
 
-int file_chars(char *path)
+int	file_chars(char *path)
 {
 	char	reader[1];
 	int		readable;
@@ -143,31 +143,27 @@ int file_chars(char *path)
 int	get_fd(char *path)
 {
 	int	fd;
-	
+
 	fd = open(path, O_RDONLY, 0);
 	if (fd <= 0)
 		exit_error("Error while trying to read the input filepath.", NULL);
 	return (fd);
 }
 
-t_node	*read_map(int fd, int lineln, int firstln, char *path)
+t_node	*read_map(int fd, char *path)
 {
 	char	reader[file_chars(path)];
-	int		newlineln;
-	char	*lastline = NULL;
 	int		readable;
 	t_node	list[node_size(path)];
-	int 	i;
+	int		i;
 	int		j;
 
 	readable = 1;
 	i = 0;
 	j = 0;
-	newlineln = 0;
-
 	readable = read(fd, reader, file_chars(path));
 	if (readable == -1)
-		error_inputfile(lastline);
+		error_inputfile();
 	linesize_checks(reader);
 	surr_checks(reader);
 	while (reader[i])
@@ -176,39 +172,12 @@ t_node	*read_map(int fd, int lineln, int firstln, char *path)
 			list[j++] = create_node(reader[i]);
 		i++;
 	}
-	
-	// while (readable > 0)
-	// {
-	// 	readable = read(fd, reader, file_chars(path));
-	// 	if (readable == -1)
-	// 		error_inputfile(lastline);
-	// 	linesize_checks(reader);
-	// 	surr_checks(reader);
-	// 	break ;
-		
-	// 	if (readable > 0 && (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C'))
-	// 	{
-	// 		if (firstln == 0)
-	// 			lastline = setup_lastline(lineln++, lastline);
-	// 		else
-	// 			lastline[newlineln] = reader[0];
-	// 		newlineln++;
-	// 	}
-	// 	if (reader[0] == '\n' || readable == 0)
-	// 		newlineln = error_linesizediffer(newlineln, lineln, lastline, firstln++);
-	// 	else
-	// 		list[i++] = create_node(reader[0]);
-	// 	if (readable == 0)
-	// 		break;
-	// 	if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))
-	// 		error_surrounded_by_walls(lastline);
-	// }
 	return (close(fd), check_nodes_type(list, j));
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	read_map(get_fd(argv[1]), 0, 0, argv[1]);
+	read_map(get_fd(argv[1]), argv[1]);
 	
 	t_prog prog;
 	// Creating a window with specified size and title

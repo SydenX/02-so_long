@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 14:15:23 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:53:24 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,12 @@ char	*setup_lastline(int lineln, char *lastline)
 	return (lastline);
 }
 
-int	error_linesizediffer(int newlineln, int lineln, char *lastline)
+int	error_linesizediffer(int newlineln, int lineln, char *lastline, int firstline)
 {
 	if (newlineln != lineln)
 	{
-		free(lastline);
+		if (lastline)
+			free(lastline);
 		exit_error("Error, file is not correctly formatted, lines size differ.", NULL);
 	}
 	return (0);
@@ -89,13 +90,16 @@ int	error_linesizediffer(int newlineln, int lineln, char *lastline)
 
 void error_surrounded_by_walls(char *lastline)
 {
-	free(lastline);
+	if (lastline)
+		free(lastline);
 	exit_error("Error, file is not correctly formatted, map must be surrounded by walls.", NULL);
 }
 
 int free_lastline(char *lastline, int *needs)
 {
 	int i2 = 0;
+	if (!lastline)
+		return (1);
 	while (lastline[i2] != 0)
 	{
 		if (lastline[i2++] != '1')
@@ -107,13 +111,15 @@ int free_lastline(char *lastline, int *needs)
 
 void	error_notformatted(char *lastline)
 {
-	free(lastline);
+	if (lastline)
+		free(lastline);
 	exit_error("Error, file is not correctly formatted.", NULL);
 }
 
 void	error_minimalpoints(char *lastline)
 {
-	free(lastline);
+	if (lastline)
+		free(lastline);
 	exit_error("Error, your map doesn't contains the minimals interest points.", NULL);
 }
 
@@ -132,12 +138,12 @@ t_node	create_node(char name)
 		new.type = EXIT;
 	else if (name == 'C')
 		new.type = COLLECTIBLE;
-	else if (name != 0 && name != '\n')
-		new.type = -1;
+	else
+		new.type = 0;
 	return (new);
 }
 
-void	check_nodes(t_node *nodes, int size, char *lastline)
+t_node	*check_nodes(t_node *nodes, int size, char *lastline)
 {
 	t_node cpy;
 	int	spawn;
@@ -145,6 +151,7 @@ void	check_nodes(t_node *nodes, int size, char *lastline)
 	int	collectible; 
 	int i;
 
+	free_lastline(lastline, NULL);
 	i = 0;
 	spawn = 0; 
 	exit = 0;
@@ -152,18 +159,17 @@ void	check_nodes(t_node *nodes, int size, char *lastline)
 	cpy = nodes[i++];
 	while (i < size)
 	{
-		if (cpy.type == -1)
-			error_notformatted(lastline);
 		if (cpy.type == SPAWN)
 			spawn++;
-		if (cpy.type == EXIT)
+		else if (cpy.type == EXIT)
 			exit++;
-		if (cpy.type == COLLECTIBLE)
+		else if (cpy.type == COLLECTIBLE)
 			collectible++;
 		cpy = nodes[i++];
 	}
-	if (spawn != 1 || exit != 1 || collectible < 1)
+	if (spawn != 1 || exit != 1 || collectible < 2)
 		error_minimalpoints(lastline);
+	return (nodes);
 }
 
 int create_list(char *path)
@@ -174,7 +180,7 @@ int create_list(char *path)
 	int		wc;
 
 	wc = 0;
-	readable = 0;
+	readable = 1;
 	fd = open(path, O_RDONLY, 0);
 	if (fd <= 0)
 		exit_error("Error while trying to read the input filepath.", NULL);
@@ -185,23 +191,33 @@ int create_list(char *path)
 			error_inputfile(NULL);
 		if (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C')
 			wc++;
+		else if (reader[0] != '\n' && reader[0] != 0)
+			error_notformatted(NULL);
 	}
 	close(fd);
-	return (wc);
+	return (wc + 1);
 }
 
-int read_map(char *path, int lineln, int firstln, int readable, int size)
+int	get_fd(char *path)
 {
-	char	reader[1];
-	int		newlineln;
-	char	*lastline;
-	t_node  list[size];
-	int 	i;
-	int		fd;
-
+	int	fd;
+	
 	fd = open(path, O_RDONLY, 0);
 	if (fd <= 0)
 		exit_error("Error while trying to read the input filepath.", NULL);
+	return (fd);
+}
+
+t_node	*read_map(int fd, int lineln, int firstln, int size)
+{
+	char	reader[1];
+	int		newlineln;
+	char	*lastline = NULL;
+	int		readable;
+	t_node	list[size];
+	int 	i;
+
+	readable = 1;
 	i = 0;
 	newlineln = 0;
 	while (readable > 0)
@@ -212,31 +228,26 @@ int read_map(char *path, int lineln, int firstln, int readable, int size)
 		if (readable > 0 && (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C'))
 		{
 			if (firstln == 0)
-			{
-				lineln++;
-				lastline = setup_lastline(lineln, lastline);
-			}
-			 else
+				lastline = setup_lastline(lineln++, lastline);
+			else
 				lastline[newlineln] = reader[0];
 			newlineln++;
 		}
-		if (reader[0] == '\n' || readable == 0){
-			firstln++;
-			newlineln = error_linesizediffer(newlineln, lineln, lastline);
-			if (readable == 0)
-				break;
-		}
+		if (reader[0] == '\n' || readable == 0)
+			newlineln = error_linesizediffer(newlineln, lineln, lastline, firstln++);
+		else
+			list[i++] = create_node(reader[0]);
+		if (readable == 0)
+			break;
 		if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))
 			error_surrounded_by_walls(lastline);
-		list[i++] = create_node(reader[0]);
 	}
-	check_nodes(list, i, lastline);
-	return (free_lastline(lastline, NULL));
+	return (check_nodes(list, i, lastline));
 }
 
 int main(int argc, char **argv)
 {
-	read_map(argv[1], 0, 0, 1, create_list(argv[1]));
+	read_map(get_fd(argv[1]), 0, 0, create_list(argv[1]));
 	
 	t_prog prog;
 	// Creating a window with specified size and title

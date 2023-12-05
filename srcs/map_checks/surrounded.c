@@ -12,7 +12,7 @@
 
 #include "head.h"
 
-void	error_surrounded_by_walls(char *lastline)
+void	error_surrounded_by_walls(void)
 {
 	if (lastline)
 		free(lastline);
@@ -31,13 +31,13 @@ int	surr_check_firstline(char *reader)
 		if (reader[i] == '\n')
 		{
 			if (reader[i + 1] != '1' || reader[i - 1] != '1')
-				error_surrounded_by_walls(NULL);
+				error_surrounded_by_walls();
 			line++;
 		}
 		else if (reader[i] == 0)
 			break ;
 		else if (line == 0 && reader[i] != '1')
-			error_surrounded_by_walls(NULL);
+			error_surrounded_by_walls();
 		i++;
 	}
 	return (1);
@@ -55,13 +55,13 @@ int	surr_checks(char *reader)
 		if (reader[i] == '\n')
 		{
 			if (reader[i + 1] != '1' || reader[i - 1] != '1')
-				error_surrounded_by_walls(NULL);
+				error_surrounded_by_walls();
 			line++;
 		}
 		else if (reader[i] == 0)
 			break ;
 		else if (line == 0 && reader[i] != '1')
-			error_surrounded_by_walls(NULL);
+			error_surrounded_by_walls();
 		i--;
 	}
 	return (surr_check_firstline(reader));

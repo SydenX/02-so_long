@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 16:21:03 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:33:50 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,6 @@ int	error_linesizediffer(int newlineln, int lineln, char *lastline, int firstlin
 		exit_error("Error, file is not correctly formatted, lines size differ.", NULL);
 	}
 	return (0);
-}
-
-void error_surrounded_by_walls(char *lastline)
-{
-	if (lastline)
-		free(lastline);
-	exit_error("Error, file is not correctly formatted, map must be surrounded by walls.", NULL);
 }
 
 int free_lastline(char *lastline, int *needs)
@@ -231,30 +224,6 @@ int	get_fd(char *path)
 	return (fd);
 }
 
-int	surr_check_firstline(char *reader)
-{
-	int	i;
-	int	line;
-
-	i = 0;
-	line = 0;
-	while (reader[i])
-	{
-		if (reader[i] == '\n')
-		{
-			if (reader[i + 1] != '1' || reader[i - 1] != '1')
-				error_surrounded_by_walls(NULL);
-			line++;
-		}
-		else if (reader[i] == 0)
-			break ;
-		else if (line == 0 && reader[i] != '1')
-			error_surrounded_by_walls(NULL);
-		i++;
-	}
-	return (1);
-}
-
 t_node	*read_map(int fd, int lineln, int firstln, char *path)
 {
 	char	reader[file_chars(path)];
@@ -272,7 +241,7 @@ t_node	*read_map(int fd, int lineln, int firstln, char *path)
 		readable = read(fd, reader, file_chars(path));
 		if (readable == -1)
 			error_inputfile(lastline);
-		surr_check_firstline(reader);
+		surr_checks(reader);
 		break ;
 		if (readable > 0 && (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C'))
 		{

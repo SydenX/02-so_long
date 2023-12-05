@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 16:33:50 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:02:39 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,6 @@ void	error_notformatted(char *lastline)
 	exit_error("Error, file is not correctly formatted.", NULL);
 }
 
-void	error_minimalpoints(char *lastline)
-{
-	if (lastline)
-		free(lastline);
-	exit_error("Error, your map doesn't contains the minimals interest points.", NULL);
-}
-
 t_node	create_node(char name)
 {
 	t_node	new;
@@ -136,7 +129,7 @@ t_node	create_node(char name)
 	return (new);
 }
 
-t_node	*check_nodes(t_node *nodes, int size, char *lastline)
+t_node	*check_nodes(t_node *nodes, int size)
 {
 	t_node cpy;
 	int	spawn;
@@ -144,7 +137,6 @@ t_node	*check_nodes(t_node *nodes, int size, char *lastline)
 	int	collectible; 
 	int i;
 
-	free_lastline(lastline, NULL);
 	i = 0;
 	spawn = 0; 
 	exit = 0;
@@ -161,7 +153,7 @@ t_node	*check_nodes(t_node *nodes, int size, char *lastline)
 		cpy = nodes[i++];
 	}
 	if (spawn != 1 || exit != 1 || collectible < 2)
-		error_minimalpoints(lastline);
+		exit_error("Error, your map doesn't contains the interest points needed.", NULL);
 	return (nodes);
 }
 
@@ -232,35 +224,52 @@ t_node	*read_map(int fd, int lineln, int firstln, char *path)
 	int		readable;
 	t_node	list[node_size(path)];
 	int 	i;
+	int		j;
 
 	readable = 1;
 	i = 0;
+	j = 0;
 	newlineln = 0;
-	while (readable > 0)
+
+	readable = read(fd, reader, file_chars(path));
+	if (readable == -1)
+		error_inputfile(lastline);
+	linesize_checks(reader);
+	surr_checks(reader);
+	while (reader[i])
 	{
-		readable = read(fd, reader, file_chars(path));
-		if (readable == -1)
-			error_inputfile(lastline);
-		surr_checks(reader);
-		break ;
-		if (readable > 0 && (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C'))
-		{
-			if (firstln == 0)
-				lastline = setup_lastline(lineln++, lastline);
-			else
-				lastline[newlineln] = reader[0];
-			newlineln++;
-		}
-		if (reader[0] == '\n' || readable == 0)
-			newlineln = error_linesizediffer(newlineln, lineln, lastline, firstln++);
-		else
-			list[i++] = create_node(reader[0]);
-		if (readable == 0)
-			break;
-		if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))
-			error_surrounded_by_walls(lastline);
+		if (reader[i] != '\n')
+			list[j++] = create_node(reader[i]);
+		i++;
 	}
-	return (close(fd), check_nodes(list, i, lastline));
+	
+	// while (readable > 0)
+	// {
+	// 	readable = read(fd, reader, file_chars(path));
+	// 	if (readable == -1)
+	// 		error_inputfile(lastline);
+	// 	linesize_checks(reader);
+	// 	surr_checks(reader);
+	// 	break ;
+		
+	// 	if (readable > 0 && (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C'))
+	// 	{
+	// 		if (firstln == 0)
+	// 			lastline = setup_lastline(lineln++, lastline);
+	// 		else
+	// 			lastline[newlineln] = reader[0];
+	// 		newlineln++;
+	// 	}
+	// 	if (reader[0] == '\n' || readable == 0)
+	// 		newlineln = error_linesizediffer(newlineln, lineln, lastline, firstln++);
+	// 	else
+	// 		list[i++] = create_node(reader[0]);
+	// 	if (readable == 0)
+	// 		break;
+	// 	if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))
+	// 		error_surrounded_by_walls(lastline);
+	// }
+	return (close(fd), check_nodes(list, j));
 }
 
 int main(int argc, char **argv)

@@ -6,17 +6,17 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:32:00 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 16:33:55 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:57:46 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "head.h"
 
-void error_surrounded_by_walls(char *lastline)
+void	error_surrounded_by_walls(char *lastline)
 {
 	if (lastline)
 		free(lastline);
-	exit_error("Error, file is not correctly formatted, map must be surrounded by walls.", NULL);
+	exit_error("Error, map must be surrounded by walls.", NULL);
 }
 
 int	surr_check_firstline(char *reader)

@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 15:53:24 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:05:04 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ t_node	*read_map(int fd, int lineln, int firstln, int size)
 		if (reader[0] == '\n' || readable == 0)
 			newlineln = error_linesizediffer(newlineln, lineln, lastline, firstln++);
 		else
-			list[i++] = create_node(reader[0]);
+			*list++ = create_node(reader[0]);
 		if (readable == 0)
 			break;
 		if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))

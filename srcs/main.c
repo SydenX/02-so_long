@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 16:05:04 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 16:21:03 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ t_node	*check_nodes(t_node *nodes, int size, char *lastline)
 	return (nodes);
 }
 
-int create_list(char *path)
+int node_size(char *path)
 {
 	char	reader[1];
 	int		readable;
@@ -198,6 +198,29 @@ int create_list(char *path)
 	return (wc + 1);
 }
 
+int file_chars(char *path)
+{
+	char	reader[1];
+	int		readable;
+	int		fd;
+	int		wc;
+
+	wc = 0;
+	readable = 1;
+	fd = open(path, O_RDONLY, 0);
+	if (fd <= 0)
+		exit_error("Error while trying to read the input filepath.", NULL);
+	while (readable > 0)
+	{
+		readable = read(fd, reader, 1);
+		if (readable == -1)
+			error_inputfile(NULL);
+		wc++;
+	}
+	close(fd);
+	return (wc);
+}
+
 int	get_fd(char *path)
 {
 	int	fd;
@@ -208,13 +231,37 @@ int	get_fd(char *path)
 	return (fd);
 }
 
-t_node	*read_map(int fd, int lineln, int firstln, int size)
+int	surr_check_firstline(char *reader)
 {
-	char	reader[1];
+	int	i;
+	int	line;
+
+	i = 0;
+	line = 0;
+	while (reader[i])
+	{
+		if (reader[i] == '\n')
+		{
+			if (reader[i + 1] != '1' || reader[i - 1] != '1')
+				error_surrounded_by_walls(NULL);
+			line++;
+		}
+		else if (reader[i] == 0)
+			break ;
+		else if (line == 0 && reader[i] != '1')
+			error_surrounded_by_walls(NULL);
+		i++;
+	}
+	return (1);
+}
+
+t_node	*read_map(int fd, int lineln, int firstln, char *path)
+{
+	char	reader[file_chars(path)];
 	int		newlineln;
 	char	*lastline = NULL;
 	int		readable;
-	t_node	list[size];
+	t_node	list[node_size(path)];
 	int 	i;
 
 	readable = 1;
@@ -222,9 +269,11 @@ t_node	*read_map(int fd, int lineln, int firstln, int size)
 	newlineln = 0;
 	while (readable > 0)
 	{
-		readable = read(fd, reader, 1);
+		readable = read(fd, reader, file_chars(path));
 		if (readable == -1)
 			error_inputfile(lastline);
+		surr_check_firstline(reader);
+		break ;
 		if (readable > 0 && (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P' || reader[0] == 'E' || reader[0] == 'C'))
 		{
 			if (firstln == 0)
@@ -236,18 +285,18 @@ t_node	*read_map(int fd, int lineln, int firstln, int size)
 		if (reader[0] == '\n' || readable == 0)
 			newlineln = error_linesizediffer(newlineln, lineln, lastline, firstln++);
 		else
-			*list++ = create_node(reader[0]);
+			list[i++] = create_node(reader[0]);
 		if (readable == 0)
 			break;
 		if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))
 			error_surrounded_by_walls(lastline);
 	}
-	return (check_nodes(list, i, lastline));
+	return (close(fd), check_nodes(list, i, lastline));
 }
 
 int main(int argc, char **argv)
 {
-	read_map(get_fd(argv[1]), 0, 0, create_list(argv[1]));
+	read_map(get_fd(argv[1]), 0, 0, argv[1]);
 	
 	t_prog prog;
 	// Creating a window with specified size and title

@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 17:02:39 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:15:13 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void exit_error(char *error, t_prog *prog)
 			mlx_destroy_window(prog->mlx, prog->win);
 		}
 	}
-	ft_printf("%s\n", error);
+	ft_printf("Error\n%s\n", error);
 	exit(0);
 }
 
@@ -65,43 +65,6 @@ void    error_inputfile(char *lastline)
 	exit_error("Error while reading the input file.", NULL);
 }
 
-char	*setup_lastline(int lineln, char *lastline)
-{
-	if (lineln == 1)
-	{
-		lastline = malloc((lineln + 1) * sizeof(char));
-		if (lastline == NULL)
-			exit_error("Memory allocation error.", NULL);
-		lastline[lineln] = 0;
-	}
-	return (lastline);
-}
-
-int	error_linesizediffer(int newlineln, int lineln, char *lastline, int firstline)
-{
-	if (newlineln != lineln)
-	{
-		if (lastline)
-			free(lastline);
-		exit_error("Error, file is not correctly formatted, lines size differ.", NULL);
-	}
-	return (0);
-}
-
-int free_lastline(char *lastline, int *needs)
-{
-	int i2 = 0;
-	if (!lastline)
-		return (1);
-	while (lastline[i2] != 0)
-	{
-		if (lastline[i2++] != '1')
-			error_surrounded_by_walls(lastline);
-	}
-	free(lastline);
-	return (1);
-}
-
 void	error_notformatted(char *lastline)
 {
 	if (lastline)
@@ -113,7 +76,6 @@ t_node	create_node(char name)
 {
 	t_node	new;
 
-	// new = malloc(sizeof(t_node));
 	if (name == '1')
 		new.type = WALL;
 	else if (name == '0')
@@ -127,34 +89,6 @@ t_node	create_node(char name)
 	else
 		new.type = 0;
 	return (new);
-}
-
-t_node	*check_nodes(t_node *nodes, int size)
-{
-	t_node cpy;
-	int	spawn;
-	int	exit;
-	int	collectible; 
-	int i;
-
-	i = 0;
-	spawn = 0; 
-	exit = 0;
-	collectible = 0;
-	cpy = nodes[i++];
-	while (i < size)
-	{
-		if (cpy.type == SPAWN)
-			spawn++;
-		else if (cpy.type == EXIT)
-			exit++;
-		else if (cpy.type == COLLECTIBLE)
-			collectible++;
-		cpy = nodes[i++];
-	}
-	if (spawn != 1 || exit != 1 || collectible < 2)
-		exit_error("Error, your map doesn't contains the interest points needed.", NULL);
-	return (nodes);
 }
 
 int node_size(char *path)
@@ -269,7 +203,7 @@ t_node	*read_map(int fd, int lineln, int firstln, char *path)
 	// 	if ((firstln == 0 && reader[0] != '1') || (newlineln == 1 && reader[0] != '1') || (newlineln == lineln && reader[0] != '1'))
 	// 		error_surrounded_by_walls(lastline);
 	// }
-	return (close(fd), check_nodes(list, j));
+	return (close(fd), check_nodes_type(list, j));
 }
 
 int main(int argc, char **argv)

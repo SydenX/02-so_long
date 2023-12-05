@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 16:57:02 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:13:23 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_node {
 	t_type			type;
 }	t_node;
 
+t_node	*check_nodes_type(t_node *nodes, int size);
 int		linesize_checks(char *reader);
 void	 exit_error(char *error, t_prog *prog);
 void	 error_surrounded_by_walls(char *lastline);

@@ -6,7 +6,7 @@
 #    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/05 16:58:59 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/05 17:13:15 by jtollena         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,8 @@ NAME = so_long
 SOURCES = srcs/main.c \
 			srcs/utils.c \
 			srcs/map_checks/surrounded.c \
-			srcs/map_checks/linesize.c
+			srcs/map_checks/linesize.c \
+			srcs/map_checks/nodestype.c
 
 OBJECTS = $(SOURCES:.c=.o)
 INCLUDES = includes

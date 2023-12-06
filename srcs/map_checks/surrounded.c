@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   surrounded.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:32:00 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 16:57:46 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/06 15:02:20 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "head.h"
 
-void	error_surrounded_by_walls(void)
+void	error_surrounded_by_walls(void *toFree, void *toFree2)
 {
-	exit_error("Error, map must be surrounded by walls.", NULL);
+	exit_error("Error, map must be surrounded by walls.", NULL, toFree, toFree2);
 }
 
 int	surr_check_firstline(char *reader)
@@ -29,13 +29,13 @@ int	surr_check_firstline(char *reader)
 		if (reader[i] == '\n')
 		{
 			if (reader[i + 1] != '1' || reader[i - 1] != '1')
-				error_surrounded_by_walls();
+				error_surrounded_by_walls((void *)reader, NULL);
 			line++;
 		}
 		else if (reader[i] == 0)
 			break ;
 		else if (line == 0 && reader[i] != '1')
-			error_surrounded_by_walls();
+			error_surrounded_by_walls((void *)reader, NULL);
 		i++;
 	}
 	return (1);
@@ -53,13 +53,13 @@ int	surr_checks(char *reader)
 		if (reader[i] == '\n')
 		{
 			if (reader[i + 1] != '1' || reader[i - 1] != '1')
-				error_surrounded_by_walls();
+				error_surrounded_by_walls((void *)reader, NULL);
 			line++;
 		}
 		else if (reader[i] == 0)
 			break ;
 		else if (line == 0 && reader[i] != '1')
-			error_surrounded_by_walls();
+			error_surrounded_by_walls((void *)reader, NULL);
 		i--;
 	}
 	return (surr_check_firstline(reader));

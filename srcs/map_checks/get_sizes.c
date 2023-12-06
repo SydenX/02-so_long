@@ -6,7 +6,7 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:12:20 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/06 11:14:41 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/06 12:23:55 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ int	node_size(char *path)
 	readable = 1;
 	fd = open(path, O_RDONLY, 0);
 	if (fd <= 0)
-		error_inputfile();
+		error_inputfile(NULL, NULL);
 	while (readable > 0)
 	{
 		readable = read(fd, reader, 1);
 		if (readable == -1)
-			error_inputfile();
+			error_inputfile(NULL, NULL);
 		if (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P'
 			|| reader[0] == 'E' || reader[0] == 'C')
 			wc++;
 		else if (reader[0] != '\n' && reader[0] != 0)
-			error_notformatted();
+			error_notformatted(NULL, NULL);
 	}
 	close(fd);
 	return (wc + 1);
@@ -50,24 +50,24 @@ int	file_chars(char *path)
 	readable = 1;
 	fd = open(path, O_RDONLY, 0);
 	if (fd <= 0)
-		error_inputfile();
+		error_inputfile(NULL, NULL);
 	while (readable > 0)
 	{
 		readable = read(fd, reader, 1);
 		if (readable == -1)
-			error_inputfile();
+			error_inputfile(NULL, NULL);
 		wc++;
 	}
 	close(fd);
 	return (wc);
 }
 
-int	get_fd(char *path)
+int	get_fd(char *path, void *toFree, void *toFree2)
 {
 	int	fd;
 
 	fd = open(path, O_RDONLY, 0);
 	if (fd <= 0)
-		error_inputfile();
+		error_inputfile(toFree, toFree2);
 	return (fd);
 }

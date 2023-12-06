@@ -6,7 +6,7 @@
 #    By: jetol <jetol@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/06 11:14:08 by jetol            ###   ########.fr        #
+#    Updated: 2023/12/06 12:11:28 by jetol            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SOURCES = srcs/main.c \
 			srcs/map_checks/linesize.c \
 			srcs/map_checks/nodestype.c \
 			srcs/map_checks/get_sizes.c \
+			srcs/node_manager/node_1.c \
 			srcs/error_manager/error_1.c
 
 OBJECTS = $(SOURCES:.c=.o)

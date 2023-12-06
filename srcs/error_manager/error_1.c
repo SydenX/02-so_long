@@ -6,14 +6,18 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:10:07 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/06 11:14:44 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/06 12:19:23 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "head.h"
 
-void	exit_error(char *error, t_prog *prog)
+void	exit_error(char *error, t_prog *prog, void *toFree, void *toFree2)
 {
+    if (toFree)
+        free(toFree);
+    if (toFree2)
+        free(toFree2);
 	if (prog != NULL)
 	{
 		if (prog->mlx != NULL && prog->win != NULL)
@@ -26,12 +30,18 @@ void	exit_error(char *error, t_prog *prog)
 	exit(0);
 }
 
-void	error_inputfile(void)
+void	error_inputfile(void *toFree, void *toFree2)
 {
-	exit_error("Unable to read the input file.", NULL);
+	exit_error("Unable to read the input file.", NULL, toFree, toFree2);
 }
 
-void	error_notformatted(void)
+void	error_notformatted(void *toFree, void *toFree2)
 {
-	exit_error("File is not correctly formatted.", NULL);
+	exit_error("File is not correctly formatted.", NULL, toFree, toFree2);
 }
+
+void	error_notcorrectinterest(void *toFree, void *toFree2)
+{
+	exit_error("Map doesn't contains the interest points needed.", NULL, toFree, toFree2);
+}
+

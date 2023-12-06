@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:53:57 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 13:23:00 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/06 11:55:19 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,4 +18,11 @@ int rgb_to_hex(int red, int green, int blue)
 
 	hex = red*65536+green*256+blue;
     return (hex);
+}
+
+int		absolute(int i)
+{
+	if (i < 0)
+		return (-i);
+	return (i);
 }

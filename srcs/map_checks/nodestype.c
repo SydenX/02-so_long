@@ -6,7 +6,7 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 17:12:42 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/06 11:15:54 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/06 15:02:53 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ t_node	*check_nodes_type(t_node *nodes, int size)
 		cpy = nodes[i++];
 	}
 	if (spawn != 1 || exit != 1 || collectible < 1)
-		exit_error("Map doesn't contains the interest points needed.", NULL);
+		error_notcorrectinterest((void *)nodes, NULL);
 	return (nodes);
 }

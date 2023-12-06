@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   head.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 17:13:23 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/06 11:13:01 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,16 @@ typedef struct s_node {
 t_node	*check_nodes_type(t_node *nodes, int size);
 int		linesize_checks(char *reader);
 void	 exit_error(char *error, t_prog *prog);
-void	 error_surrounded_by_walls(char *lastline);
+void	 error_surrounded_by_walls(void);
 int		surr_checks(char *reader);
 int		surr_check_firstline(char *reader);
 int		rgb_to_hex(int red, int green, int blue);
 void	ft_nodeadd_back(t_node **list, t_node *new);
+void	exit_error(char *error, t_prog *prog);
+void	error_inputfile(void);
+void	error_notformatted(void);
+int	node_size(char *path);
+int	file_chars(char *path);
+int	get_fd(char *path);
 
 #endif

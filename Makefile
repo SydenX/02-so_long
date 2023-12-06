@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
+#    By: jetol <jetol@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/05 17:13:15 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/06 11:14:08 by jetol            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,9 @@ SOURCES = srcs/main.c \
 			srcs/utils.c \
 			srcs/map_checks/surrounded.c \
 			srcs/map_checks/linesize.c \
-			srcs/map_checks/nodestype.c
+			srcs/map_checks/nodestype.c \
+			srcs/map_checks/get_sizes.c \
+			srcs/error_manager/error_1.c
 
 OBJECTS = $(SOURCES:.c=.o)
 INCLUDES = includes

@@ -14,8 +14,6 @@
 
 void	error_surrounded_by_walls(void)
 {
-	if (lastline)
-		free(lastline);
 	exit_error("Error, map must be surrounded by walls.", NULL);
 }
 

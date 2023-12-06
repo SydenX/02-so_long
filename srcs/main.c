@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/05 17:19:12 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/06 11:13:49 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,6 @@ int	close_window(int keycode, t_prog *prog)
 	return (1);
 }
 
-void	exit_error(char *error, t_prog *prog)
-{
-	if (prog != NULL)
-	{
-		if (prog->mlx != NULL && prog->win != NULL)
-		{
-			mlx_clear_window(prog->mlx, prog->win);
-			mlx_destroy_window(prog->mlx, prog->win);
-		}
-	}
-	ft_printf("Error\n%s\n", error);
-	exit(0);
-}
-
 /* Perfoming checks on file, is file readable?
 *  Is map surrunded by walls?
 *  Are each line at the same size?
@@ -59,22 +45,12 @@ TODO Handling the right error message as specified in the subject
 
 */
 
-void	error_inputfile(void)
-{
-	exit_error("Error while reading the input file.", NULL);
-}
-
-void	error_notformatted(char *lastline)
-{
-	if (lastline)
-		free(lastline);
-	exit_error("Error, file is not correctly formatted.", NULL);
-}
-
-t_node	create_node(char name)
+t_node	create_node(char name, int x, int y)
 {
 	t_node	new;
 
+	new.x = x;
+	new.y = y;
 	if (name == '1')
 		new.type = WALL;
 	else if (name == '0')
@@ -90,94 +66,57 @@ t_node	create_node(char name)
 	return (new);
 }
 
-int	node_size(char *path)
+int	do_map_checks(int fd, char *reader)
 {
-	char	reader[1];
-	int		readable;
-	int		fd;
-	int		wc;
-
-	wc = 0;
-	readable = 1;
-	fd = open(path, O_RDONLY, 0);
-	if (fd <= 0)
-		exit_error("Error while trying to read the input filepath.", NULL);
-	while (readable > 0)
-	{
-		readable = read(fd, reader, 1);
-		if (readable == -1)
-			error_inputfile(NULL);
-		if (reader[0] == '1' || reader[0] == '0' || reader[0] == 'P'
-			|| reader[0] == 'E' || reader[0] == 'C')
-			wc++;
-		else if (reader[0] != '\n' && reader[0] != 0)
-			error_notformatted(NULL);
-	}
 	close(fd);
-	return (wc + 1);
+	linesize_checks(reader);
+	surr_checks(reader);
+	return (0);
 }
 
-int	file_chars(char *path)
+t_node	*read_map(int fd, int fc, char *reader, t_node *list)
 {
-	char	reader[1];
 	int		readable;
-	int		fd;
-	int		wc;
-
-	wc = 0;
-	readable = 1;
-	fd = open(path, O_RDONLY, 0);
-	if (fd <= 0)
-		exit_error("Error while trying to read the input filepath.", NULL);
-	while (readable > 0)
-	{
-		readable = read(fd, reader, 1);
-		if (readable == -1)
-			error_inputfile(NULL);
-		wc++;
-	}
-	close(fd);
-	return (wc);
-}
-
-int	get_fd(char *path)
-{
-	int	fd;
-
-	fd = open(path, O_RDONLY, 0);
-	if (fd <= 0)
-		exit_error("Error while trying to read the input filepath.", NULL);
-	return (fd);
-}
-
-t_node	*read_map(int fd, char *path)
-{
-	char	reader[file_chars(path)];
-	int		readable;
-	t_node	list[node_size(path)];
 	int		i;
 	int		j;
+	int		y;
 
 	readable = 1;
 	i = 0;
 	j = 0;
-	readable = read(fd, reader, file_chars(path));
+	y = 0;
+	readable = read(fd, reader, fc);
 	if (readable == -1)
 		error_inputfile();
-	linesize_checks(reader);
-	surr_checks(reader);
+	fc = do_map_checks(fd, reader);
 	while (reader[i])
 	{
 		if (reader[i] != '\n')
-			list[j++] = create_node(reader[i]);
+			list[j++] = create_node(reader[i], fc++, y);
+		else
+		{
+			y++;
+			fc = 0;
+		}
 		i++;
 	}
-	return (close(fd), check_nodes_type(list, j));
+	return (check_nodes_type(list, j));
 }
 
 int	main(int argc, char **argv)
 {
-	read_map(get_fd(argv[1]), argv[1]);
+	int fileChars = file_chars(argv[1]);
+	char *reader = malloc((fileChars + 1) * sizeof(char));
+	if (!reader)
+		exit_error("Failed malloc allocation", NULL);
+	reader[fileChars] = 0;
+	t_list *list = malloc(node_size(argv[1]) * sizeof(t_node));
+	if (!list)
+	{
+		free(reader);
+		exit_error("Failed malloc allocation", NULL);
+	}
+	read_map(get_fd(argv[1]), fileChars, reader, list);
 	
 	t_prog prog;
 	// Creating a window with specified size and title

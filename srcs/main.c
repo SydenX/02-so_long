@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 11:31:08 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 15:14:02 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,81 @@
 *  
 */
 
-int	close_window(int keycode, t_prog *prog)
+int	close_window(t_data *data)
 {
-	if (keycode == KEY_ESCAPE)
-	{
-		mlx_clear_window(prog->mlx, prog->win);
-		mlx_destroy_window(prog->mlx, prog->win);
-		exit(0);
-	}
+
+	mlx_clear_window(data->prog->mlx, data->prog->win);
+	mlx_destroy_window(data->prog->mlx, data->prog->win);
+	free(data->imgs);
+	free(data->nodes);
+	free(data->prog->mlx);
+	exit(0);
 	return (1);
 }
 
-int	move_player(int keycode, t_data *data)
+t_img	*get_player_image(t_data *data)
 {
-	if (keycode == KEY_W)
+	t_img 	*cpy;
+	int		i;
+
+	i = 0;
+	cpy = data->imgs;
+	while (cpy->type != NULLT)
 	{
-		// mlx_destroy_image(data->prog.mlx, data->img);
-		mlx_put_image_to_window(data->prog.mlx, data->prog.win, data->img, (data->x) * SIZE, (data->y - 1) * SIZE);
+		if (cpy->type == SPAWN)
+			return (&data->imgs[i]);
+		i++;
+		cpy++;
 	}
+	return (data->imgs);
+}
+
+t_img	*update_player_image(t_data *data, t_img new)
+{
+	t_img 	*cpy;
+	int		i;
+
+	cpy = data->imgs;
+	i = 0;
+	while (cpy->type != NULLT)
+	{
+		if (cpy->type == SPAWN)
+		{
+			data->imgs[i] = new;
+			return (&data->imgs[i]);
+		}
+		i++;
+		cpy++;
+	}
+	return (data->imgs);
+}
+
+void	move_player(int key, t_data *data)
+{
+	t_img	*oldimg;
+
+	oldimg = get_player_image(data);
+	if (key == KEY_W)
+		oldimg->y -= 1;
+	else if (key == KEY_S)
+		oldimg->y += 1;
+	else if (key == KEY_A)
+		oldimg->x -= 1;
+	else if (key == KEY_D)
+		oldimg->x += 1;
+	mlx_destroy_image(data->prog->mlx, oldimg->img);
+	oldimg->img = get_image(data->prog, SPAWN);
+	map_init(data);
+}
+
+int	event_key_pressed(int keycode, t_data *data)
+{
+	t_img	*oldimg;
+
+	if (keycode == KEY_W || keycode == KEY_A || keycode == KEY_D || keycode == KEY_S)
+		move_player(keycode, data);
+	else if (keycode == KEY_ESCAPE)
+		close_window(data);
 	return (1);
 }
 
@@ -92,48 +149,71 @@ t_node	*read_map(int fd, int fc, char *reader, t_node *list)
 	return (free(reader), check_nodes_type(list, j));
 }
 
-void	map_init(t_node *list, t_prog prog)
+void	*get_image(t_prog *prog, t_type type)
 {
 	int img_width;
 	int img_height;
-	t_node	*cpy;
+
+	if (type == WALL)
+		return (mlx_xpm_file_to_image(prog->mlx, "img/MegaTree.xpm", &img_width, &img_height));
+	if (type == WALL)
+		return (mlx_xpm_file_to_image(prog->mlx, "img/Bush.xpm", &img_width, &img_height));
+	if (type == COLLECTIBLE)
+		return (mlx_xpm_file_to_image(prog->mlx, "img/Mushroom.xpm", &img_width, &img_height));
+	if (type == EXIT)
+		return (mlx_xpm_file_to_image(prog->mlx, "img/Exit.xpm", &img_width, &img_height));
+	if (type == SPAWN)
+		return (mlx_xpm_file_to_image(prog->mlx, "img/Ruin.xpm", &img_width, &img_height));
+	if (type == NULLT)
+		return (NULL);
+	return (mlx_xpm_file_to_image(prog->mlx, "img/Grass.xpm", &img_width, &img_height));
+}
+
+t_img	create_image(int x, int y, t_type type, t_prog *prog)
+{
+	t_img	new;
+	new.x = x;
+	new.y = y;
+	new.type = type;
+	new.img = get_image(prog, type);
+	return (new);
+}
+
+t_img	*load_images(t_img *imgs, t_node *list, t_prog *prog)
+{
+	t_node *cpy;
+	int		i;
 
 	cpy = list;
-	void *imgFloor = mlx_xpm_file_to_image(prog.mlx, "img/Grass.xpm", &img_width, &img_height);
-	void *imgMegaTree = mlx_xpm_file_to_image(prog.mlx, "img/MegaTree.xpm", &img_width, &img_height);
-	void *imgMushroom = mlx_xpm_file_to_image(prog.mlx, "img/Mushroom.xpm", &img_width, &img_height);
-	void *imgBush = mlx_xpm_file_to_image(prog.mlx, "img/Bush.xpm", &img_width, &img_height);
-	void *imgExit = mlx_xpm_file_to_image(prog.mlx, "img/Exit.xpm", &img_width, &img_height);
-	void *imgPlayer = mlx_xpm_file_to_image(prog.mlx, "img/Ruin.xpm", &img_width, &img_height);
-	if (imgFloor == NULL)
-		close_window(KEY_ESCAPE, &prog);
-	int	i = 1;
+	i = 0;
 	while (cpy->type != NULLT)
 	{
-		mlx_put_image_to_window(prog.mlx, prog.win, imgFloor, cpy->x * SIZE, cpy->y * SIZE);
-		if (cpy->type == WALL)
-		{
-			if ((cpy->h * cpy->x) % 3 == 0)
-				mlx_put_image_to_window(prog.mlx, prog.win, imgBush, cpy->x * SIZE, cpy->y * SIZE);
-			else
-				mlx_put_image_to_window(prog.mlx, prog.win, imgMegaTree, cpy->x * SIZE, cpy->y * SIZE);
-		}
-		else if (cpy->type == EXIT)
-			mlx_put_image_to_window(prog.mlx, prog.win, imgExit, cpy->x * SIZE, cpy->y * SIZE);
-		else if (cpy->type == COLLECTIBLE)
-			mlx_put_image_to_window(prog.mlx, prog.win, imgMushroom, cpy->x * SIZE, cpy->y * SIZE);
-		else if (cpy->type == SPAWN)
-			mlx_put_image_to_window(prog.mlx, prog.win, imgPlayer, cpy->x * SIZE, cpy->y * SIZE);
-		//else if (cpy->type == FLOOR)
+		imgs[i++] = create_image(cpy->x, cpy->y, FLOOR, prog);
 		cpy++;
 	}
-	t_data	data;
+	cpy = list;
+	while (cpy->type != NULLT)
+	{
+		imgs[i++] = create_image(cpy->x, cpy->y, cpy->type, prog);
+		cpy++;
+	}
+	imgs[i] = create_image(0, 0, NULLT, prog);
+	return (imgs);
+}
 
-	data.prog = prog;
-	data.img = &imgPlayer;
-	data.y = 2;
-	data.x = 12;
-	mlx_key_hook(prog.win, move_player, &data);
+void	move_image(){}
+
+void map_init(t_data *data)
+{
+	t_img	*cpy;
+
+	cpy = data->imgs;
+	mlx_clear_window(data->prog->mlx, data->prog->win);
+	while (cpy->type != NULLT)
+	{
+		mlx_put_image_to_window(data->prog->mlx, data->prog->win, cpy->img, cpy->x * SIZE, cpy->y * SIZE);
+		cpy++;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -161,8 +241,18 @@ int	main(int argc, char **argv)
 	prog.win = mlx_new_window(prog.mlx, get_list_xlen(list) * SIZE, get_list_ylen(list) * SIZE, "test");
 	if (prog.mlx == NULL)
 		return (0);
-	mlx_key_hook(prog.win, close_window, &prog);
-	map_init(list, prog);	
+	t_img *imgs = malloc(((node_size(argv[1]) * 2) + 1) * sizeof(t_node));
+	if (!imgs)
+		exit_error("Failed malloc allocation", &prog, list, reader);
+	imgs = load_images(imgs, list, &prog);
+	t_data data;
+	data.prog = &prog;
+	data.imgs = imgs;
+	data.nodes = list;
+
+	map_init(&data);
+	mlx_hook(prog.win, 17, 0, &close_window, &data);
+	mlx_hook(prog.win, 2, 0, &event_key_pressed, &data);
 	// listening to any events
 	mlx_loop(prog.mlx);
 	return argc;

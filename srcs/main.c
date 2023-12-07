@@ -6,7 +6,7 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 18:47:22 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/07 19:09:46 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,17 @@ void	move_player(int key, t_data *data)
 	t_img	*oldimg;
 
 	oldimg = get_player_image(data);
-	if (key == KEY_W && is_node_free(oldimg->x, oldimg->y - 1, data) == 1)
+	if ((key == KEY_W || key == KEY_UP)
+		&& is_node_free(oldimg->x, oldimg->y - 1, data) == 1)
 		oldimg->y -= 1;
-	else if (key == KEY_S && is_node_free(oldimg->x, oldimg->y + 1, data) == 1)
+	else if ((key == KEY_S || key == KEY_DOWN)
+		&& is_node_free(oldimg->x, oldimg->y + 1, data) == 1)
 		oldimg->y += 1;
-	else if (key == KEY_A && is_node_free(oldimg->x - 1, oldimg->y, data) == 1)
+	else if ((key == KEY_A || key == KEY_LEFT)
+		&& is_node_free(oldimg->x - 1, oldimg->y, data) == 1)
 		oldimg->x -= 1;
-	else if (key == KEY_D && is_node_free(oldimg->x + 1, oldimg->y, data) == 1)
+	else if ((key == KEY_D || key == KEY_RIGHT)
+		&& is_node_free(oldimg->x + 1, oldimg->y, data) == 1)
 		oldimg->x += 1;
 	mlx_destroy_image(data->prog->mlx, oldimg->img);
 	oldimg->img = get_image(data->prog, SPAWN);
@@ -81,22 +85,15 @@ int	event_key_pressed(int keycode, t_data *data)
 {
 	t_img	*oldimg;
 
-	if (keycode == KEY_W || keycode == KEY_A || keycode == KEY_D || keycode == KEY_S)
+	if (keycode == KEY_W || keycode == KEY_A 
+		|| keycode == KEY_D || keycode == KEY_S
+		|| keycode == KEY_UP || keycode == KEY_RIGHT 
+		|| keycode == KEY_LEFT || keycode == KEY_DOWN)
 		move_player(keycode, data);
 	else if (keycode == KEY_ESCAPE)
 		close_window(data);
 	return (1);
 }
-
-/* Perfoming checks on file, is file readable?
-*  Is map surrunded by walls?
-*  Are each line at the same size?
-*  Is there only 1 starting point, one exit and at least 1 collectibles?
-
-TODO Valid path ?
-TODO Handling the right error message as specified in the subject
-
-*/
 
 int	do_map_checks(int fd, char *reader)
 {

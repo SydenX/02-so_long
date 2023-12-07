@@ -6,7 +6,7 @@
 #    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/07 16:03:33 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/07 16:13:24 by jtollena         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SOURCES = srcs/main.c \
 			srcs/map_checks/get_sizes.c \
 			srcs/map_checks/pathfinder.c \
 			srcs/node_manager/node_1.c \
+			srcs/node_manager/node_utils.c \
 			srcs/image_manager/image_1.c \
 			srcs/error_manager/error_1.c
 

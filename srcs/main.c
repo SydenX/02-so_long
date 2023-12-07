@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 16:07:21 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 16:07:35 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,6 @@ int	close_window(t_data *data)
 	free(data->prog->mlx);
 	exit(0);
 	return (1);
-}
-
-int	collectibles_left(t_img *list)
-{
-	t_img	*cpy;
-
-	cpy = list;
-	while (cpy->type != NULLT)
-	{
-		if (cpy->type == COLLECTIBLE)
-			return (1);
-		cpy++;
-	}
-	return (0);
 }
 
 int	is_node_free(int x, int y, t_data *data)

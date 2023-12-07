@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:09 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 16:04:35 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 16:18:52 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_img	*get_player_image(t_data *data)
 {
-	t_img 	*cpy;
+	t_img	*cpy;
 	int		i;
 
 	i = 0;
@@ -41,7 +41,7 @@ t_img	*get_img_at(t_img *list, int x, int y, int isfloor)
 		if (cpy->x == x && cpy->y == y)
 		{
 			if (cpy->type == FLOOR && isfloor)
-            	return (&list[i]);
+				return (&list[i]);
 			else if (cpy->type != FLOOR)
 				return (&list[i]);
 		}
@@ -53,8 +53,8 @@ t_img	*get_img_at(t_img *list, int x, int y, int isfloor)
 
 void	*get_image(t_prog *prog, t_type type)
 {
-	int img_width;
-	int img_height;
+	int	img_width;
+	int	img_height;
 
 	if (type == WALL)
 		return (mlx_xpm_file_to_image(prog->mlx, "img/MegaTree.xpm", &img_width, &img_height));
@@ -74,6 +74,7 @@ void	*get_image(t_prog *prog, t_type type)
 t_img	create_image(int x, int y, t_type type, t_prog *prog)
 {
 	t_img	new;
+
 	new.x = x;
 	new.y = y;
 	new.type = type;
@@ -83,7 +84,7 @@ t_img	create_image(int x, int y, t_type type, t_prog *prog)
 
 t_img	*load_images(t_img *imgs, t_node *list, t_prog *prog)
 {
-	t_node *cpy;
+	t_node	*cpy;
 	int		i;
 
 	cpy = list;

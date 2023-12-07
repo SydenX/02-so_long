@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   head.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/06 20:49:33 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/07 11:27:42 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <fcntl.h>
 #include <stdio.h>
 
-# define SIZE 16
+# define SIZE 64
 
 typedef enum e_type {
 	FLOOR,
@@ -36,6 +36,13 @@ typedef struct s_prog {
 	void	*mlx;
 	void	*win;
 }	t_prog;
+
+typedef struct s_data {
+	t_prog	prog;
+	int		x;
+	int		y;
+	void 	*img;
+}	t_data;
 
 typedef struct s_node {
 	int				x;
@@ -71,5 +78,7 @@ int		check_arround(t_node node, t_node *list);
 int		update_node(t_node node, t_node *list);
 void	pathf_run(t_node *list);
 void	pathf_setup_h(t_node *list);
+int		get_list_xlen(t_node *list);
+int		get_list_ylen(t_node *list);
 
 #endif

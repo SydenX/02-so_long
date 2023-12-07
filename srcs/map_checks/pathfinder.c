@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pathfinder.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 20:43:28 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/06 20:50:30 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/07 10:54:28 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,9 @@ void	pathf_setup_h(t_node *list)
 	cpy = list;
 	while (cpy->type != NULLT)
 	{
-		if (cpy->type == FLOOR || cpy->type == COLLECTIBLE)
-		{
-			xdiff = absolute(cpy->x - exit.x);
-			ydiff = absolute(cpy->y - exit.y);
-			cpy->h = xdiff + ydiff;
-		}
+		xdiff = absolute(cpy->x - exit.x);
+		ydiff = absolute(cpy->y - exit.y);
+		cpy->h = xdiff + ydiff;
 		cpy++;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/06 20:44:43 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/07 11:31:08 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,16 @@ int	close_window(int keycode, t_prog *prog)
 		mlx_clear_window(prog->mlx, prog->win);
 		mlx_destroy_window(prog->mlx, prog->win);
 		exit(0);
+	}
+	return (1);
+}
+
+int	move_player(int keycode, t_data *data)
+{
+	if (keycode == KEY_W)
+	{
+		// mlx_destroy_image(data->prog.mlx, data->img);
+		mlx_put_image_to_window(data->prog.mlx, data->prog.win, data->img, (data->x) * SIZE, (data->y - 1) * SIZE);
 	}
 	return (1);
 }
@@ -82,6 +92,50 @@ t_node	*read_map(int fd, int fc, char *reader, t_node *list)
 	return (free(reader), check_nodes_type(list, j));
 }
 
+void	map_init(t_node *list, t_prog prog)
+{
+	int img_width;
+	int img_height;
+	t_node	*cpy;
+
+	cpy = list;
+	void *imgFloor = mlx_xpm_file_to_image(prog.mlx, "img/Grass.xpm", &img_width, &img_height);
+	void *imgMegaTree = mlx_xpm_file_to_image(prog.mlx, "img/MegaTree.xpm", &img_width, &img_height);
+	void *imgMushroom = mlx_xpm_file_to_image(prog.mlx, "img/Mushroom.xpm", &img_width, &img_height);
+	void *imgBush = mlx_xpm_file_to_image(prog.mlx, "img/Bush.xpm", &img_width, &img_height);
+	void *imgExit = mlx_xpm_file_to_image(prog.mlx, "img/Exit.xpm", &img_width, &img_height);
+	void *imgPlayer = mlx_xpm_file_to_image(prog.mlx, "img/Ruin.xpm", &img_width, &img_height);
+	if (imgFloor == NULL)
+		close_window(KEY_ESCAPE, &prog);
+	int	i = 1;
+	while (cpy->type != NULLT)
+	{
+		mlx_put_image_to_window(prog.mlx, prog.win, imgFloor, cpy->x * SIZE, cpy->y * SIZE);
+		if (cpy->type == WALL)
+		{
+			if ((cpy->h * cpy->x) % 3 == 0)
+				mlx_put_image_to_window(prog.mlx, prog.win, imgBush, cpy->x * SIZE, cpy->y * SIZE);
+			else
+				mlx_put_image_to_window(prog.mlx, prog.win, imgMegaTree, cpy->x * SIZE, cpy->y * SIZE);
+		}
+		else if (cpy->type == EXIT)
+			mlx_put_image_to_window(prog.mlx, prog.win, imgExit, cpy->x * SIZE, cpy->y * SIZE);
+		else if (cpy->type == COLLECTIBLE)
+			mlx_put_image_to_window(prog.mlx, prog.win, imgMushroom, cpy->x * SIZE, cpy->y * SIZE);
+		else if (cpy->type == SPAWN)
+			mlx_put_image_to_window(prog.mlx, prog.win, imgPlayer, cpy->x * SIZE, cpy->y * SIZE);
+		//else if (cpy->type == FLOOR)
+		cpy++;
+	}
+	t_data	data;
+
+	data.prog = prog;
+	data.img = &imgPlayer;
+	data.y = 2;
+	data.x = 12;
+	mlx_key_hook(prog.win, move_player, &data);
+}
+
 int	main(int argc, char **argv)
 {
 	int fileChars = file_chars(argv[1]);
@@ -96,44 +150,20 @@ int	main(int argc, char **argv)
 		exit_error("Failed malloc allocation", NULL, NULL, NULL);
 	}
 	list = read_map(get_fd(argv[1], (void *)list, (void *)reader), fileChars, reader, list);
-	pathf_setup_H(list);
+	pathf_setup_h(list);
 	pathf_run(list);
-	// printf("\nx: %d \ny: %d \ndist: %d", list->x, list->y, list->h);
-
 	
-	// t_prog prog;
-	// // Creating a window with specified size and title
-	// prog.mlx = mlx_init();
-	// if (prog.mlx == NULL)
-	// 	return (0);
-	// prog.win = mlx_new_window(prog.mlx, 1920/4, 1080/4, "test");
-	// if (prog.mlx == NULL)
-	// 	return (0);
-
-	// mlx_key_hook(prog.win, close_window, &prog);
-	// int img_width;
-	// int img_height;
-	// void *imgFloor = mlx_xpm_file_to_image(prog.mlx, "img/grass.xpm", &img_width, &img_height);
-	// void *imgWallUp = mlx_xpm_file_to_image(prog.mlx, "img/wall_up.xpm", &img_width, &img_height);
-	// if (imgFloor == NULL || imgWallUp == NULL)
-	// 	return (close_window(KEY_ESCAPE, &prog), 0);
-	// int i = 0;
-	// int j = -SIZE;
-	// int line = 0;
-	// while (i < argc)
-	// {
-	// 	if (argv[i][0] == 'n'){
-	// 		line += SIZE;
-	// 		j = -SIZE;  
-	// 	} else if (argv[i][0] == 'X')
-	// 		mlx_put_image_to_window(prog.mlx, prog.win, imgWallUp, j, line);
-	// 	else if (argv[i][0] == '0')
-	// 		mlx_put_image_to_window(prog.mlx, prog.win, imgFloor, j, line);
-	// 	j += SIZE;
-	// 	i++;
-	// }
-	
-	// // listening to any events
-	// mlx_loop(prog.mlx);
+	t_prog prog;
+	// Creating a window with specified size and title
+	prog.mlx = mlx_init();
+	if (prog.mlx == NULL)
+		return (0);
+	prog.win = mlx_new_window(prog.mlx, get_list_xlen(list) * SIZE, get_list_ylen(list) * SIZE, "test");
+	if (prog.mlx == NULL)
+		return (0);
+	mlx_key_hook(prog.win, close_window, &prog);
+	map_init(list, prog);	
+	// listening to any events
+	mlx_loop(prog.mlx);
 	return argc;
 }

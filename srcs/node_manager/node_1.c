@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node_1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:56:14 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/06 15:25:50 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/07 10:02:38 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +111,36 @@ int	get_list_size(t_node *list)
 		cpy++;
 	}
 	return (i);
+}
+
+int	get_list_xlen(t_node *list)
+{
+	t_node	*cpy;
+    int     lastx;
+
+    lastx = 0;
+	cpy = list;
+	while (cpy->type != NULLT)
+	{
+		if (cpy->x > lastx)
+			lastx = cpy->x;
+		cpy++;
+	}
+	return (lastx + 1);
+}
+
+int	get_list_ylen(t_node *list)
+{
+	t_node	*cpy;
+    int     lasty;
+
+    lasty = 0;
+	cpy = list;
+	while (cpy->type != NULLT)
+	{
+		if (cpy->y > lasty)
+			lasty = cpy->y;
+		cpy++;
+	}
+	return (lasty + 1);
 }

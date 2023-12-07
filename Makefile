@@ -6,7 +6,7 @@
 #    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/07 16:13:24 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/07 16:21:56 by jtollena         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SOURCES = srcs/main.c \
 
 OBJECTS = $(SOURCES:.c=.o)
 INCLUDES = includes
-FLAGS = #-Wall -Wextra #-Werror
+FLAGS = #-fsanitize=address#-Wall -Wextra #-Werror
 LINKS = -I libft -L libft \
     -I /usr/local/include -L /usr/local/lib \
     -l mlx -l ft -l ftprintf -framework OpenGL -framework Appkit

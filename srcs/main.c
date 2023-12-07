@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 15:41:59 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 16:07:21 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,33 +36,36 @@ int	close_window(t_data *data)
 	return (1);
 }
 
-t_img	*get_player_image(t_data *data)
+int	collectibles_left(t_img *list)
 {
-	t_img 	*cpy;
-	int		i;
+	t_img	*cpy;
 
-	i = 0;
-	cpy = data->imgs;
+	cpy = list;
 	while (cpy->type != NULLT)
 	{
-		if (cpy->type == SPAWN)
-			return (&data->imgs[i]);
-		i++;
+		if (cpy->type == COLLECTIBLE)
+			return (1);
 		cpy++;
 	}
-	return (data->imgs);
+	return (0);
 }
 
 int	is_node_free(int x, int y, t_data *data)
 {
 	t_node	*node;
+	t_img	*img;
 
 	node = get_node_at(data->nodes, x, y);
-	if (node->type == FLOOR)
+	if (node->type == FLOOR || node->type == SPAWN)
+		return (1);
+	if (node->type == EXIT && !collectibles_left(data->imgs))
 		return (1);
 	if (node->type == COLLECTIBLE)
 	{
-		data->nodes->type = FLOOR;
+		img = get_img_at(data->imgs, x, y, 0);
+		img->type = FLOOR;
+		mlx_destroy_image(data->prog->mlx, img->img);
+		img->img = get_image(data->prog, FLOOR);
 		return (1);
 	}
 	if (node->type == WALL)
@@ -144,58 +147,6 @@ t_node	*read_map(int fd, int fc, char *reader, t_node *list)
 	}
 	list[j] = create_node(1, 0, 0);
 	return (free(reader), check_nodes_type(list, j));
-}
-
-void	*get_image(t_prog *prog, t_type type)
-{
-	int img_width;
-	int img_height;
-
-	if (type == WALL)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/MegaTree.xpm", &img_width, &img_height));
-	if (type == WALL)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Bush.xpm", &img_width, &img_height));
-	if (type == COLLECTIBLE)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Mushroom.xpm", &img_width, &img_height));
-	if (type == EXIT)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Exit.xpm", &img_width, &img_height));
-	if (type == SPAWN)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Ruin.xpm", &img_width, &img_height));
-	if (type == NULLT)
-		return (NULL);
-	return (mlx_xpm_file_to_image(prog->mlx, "img/Grass.xpm", &img_width, &img_height));
-}
-
-t_img	create_image(int x, int y, t_type type, t_prog *prog)
-{
-	t_img	new;
-	new.x = x;
-	new.y = y;
-	new.type = type;
-	new.img = get_image(prog, type);
-	return (new);
-}
-
-t_img	*load_images(t_img *imgs, t_node *list, t_prog *prog)
-{
-	t_node *cpy;
-	int		i;
-
-	cpy = list;
-	i = 0;
-	while (cpy->type != NULLT)
-	{
-		imgs[i++] = create_image(cpy->x, cpy->y, FLOOR, prog);
-		cpy++;
-	}
-	cpy = list;
-	while (cpy->type != NULLT)
-	{
-		imgs[i++] = create_image(cpy->x, cpy->y, cpy->type, prog);
-		cpy++;
-	}
-	imgs[i] = create_image(0, 0, NULLT, prog);
-	return (imgs);
 }
 
 void map_init(t_data *data)

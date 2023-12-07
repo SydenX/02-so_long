@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 15:41:29 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 16:05:03 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,10 @@ void	pathf_run(t_node *list);
 void	pathf_setup_h(t_node *list);
 int		get_list_xlen(t_node *list);
 int		get_list_ylen(t_node *list);
+t_img	*get_player_image(t_data *data);
+t_img	*get_img_at(t_img *list, int x, int y, int isfloor);
+t_img	create_image(int x, int y, t_type type, t_prog *prog);
+t_img	*load_images(t_img *imgs, t_node *list, t_prog *prog);
 void	*get_image(t_prog *prog, t_type type);
 void 	map_init(t_data *data);
 

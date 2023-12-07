@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 15:09:49 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 15:41:29 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int		get_fd(char *path, void *toFree, void *toFree2);
 t_node	create_node(char name, int x, int y);
 t_node	find_exit_point(t_node *list);
 t_node	find_spawn_point(t_node *list);
-t_node	get_node_at(t_node *list, int x, int y);
+t_node	*get_node_at(t_node *list, int x, int y);
 int		get_list_size(t_node *list);
 int		check_arround(t_node node, t_node *list);
 int		update_node(t_node node, t_node *list);

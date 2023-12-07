@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:56:14 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/07 10:02:38 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 15:43:12 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,21 @@ t_node	find_spawn_point(t_node *list)
 	}
 	return (*cpy);
 }
-t_node	get_node_at(t_node *list, int x, int y)
+t_node	*get_node_at(t_node *list, int x, int y)
 {
 	t_node	*cpy;
+	int		i;
 
+	i = 0;
 	cpy = list;
 	while (cpy->type != NULLT)
 	{
 		if (cpy->x == x && cpy->y == y)
-            return (*cpy);
+            return (&list[i]);
+		i++;
 		cpy++;
 	}
-	return (*list);
+	return (list);
 }
 
 int	update_node(t_node node, t_node *list)

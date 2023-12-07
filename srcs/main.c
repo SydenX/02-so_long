@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 15:14:02 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 15:41:59 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,24 +53,21 @@ t_img	*get_player_image(t_data *data)
 	return (data->imgs);
 }
 
-t_img	*update_player_image(t_data *data, t_img new)
+int	is_node_free(int x, int y, t_data *data)
 {
-	t_img 	*cpy;
-	int		i;
+	t_node	*node;
 
-	cpy = data->imgs;
-	i = 0;
-	while (cpy->type != NULLT)
+	node = get_node_at(data->nodes, x, y);
+	if (node->type == FLOOR)
+		return (1);
+	if (node->type == COLLECTIBLE)
 	{
-		if (cpy->type == SPAWN)
-		{
-			data->imgs[i] = new;
-			return (&data->imgs[i]);
-		}
-		i++;
-		cpy++;
+		data->nodes->type = FLOOR;
+		return (1);
 	}
-	return (data->imgs);
+	if (node->type == WALL)
+		return (0);
+	return (0);
 }
 
 void	move_player(int key, t_data *data)
@@ -78,13 +75,13 @@ void	move_player(int key, t_data *data)
 	t_img	*oldimg;
 
 	oldimg = get_player_image(data);
-	if (key == KEY_W)
+	if (key == KEY_W && is_node_free(oldimg->x, oldimg->y - 1, data) == 1)
 		oldimg->y -= 1;
-	else if (key == KEY_S)
+	else if (key == KEY_S && is_node_free(oldimg->x, oldimg->y + 1, data) == 1)
 		oldimg->y += 1;
-	else if (key == KEY_A)
+	else if (key == KEY_A && is_node_free(oldimg->x - 1, oldimg->y, data) == 1)
 		oldimg->x -= 1;
-	else if (key == KEY_D)
+	else if (key == KEY_D && is_node_free(oldimg->x + 1, oldimg->y, data) == 1)
 		oldimg->x += 1;
 	mlx_destroy_image(data->prog->mlx, oldimg->img);
 	oldimg->img = get_image(data->prog, SPAWN);
@@ -201,19 +198,22 @@ t_img	*load_images(t_img *imgs, t_node *list, t_prog *prog)
 	return (imgs);
 }
 
-void	move_image(){}
-
 void map_init(t_data *data)
 {
 	t_img	*cpy;
+	t_img	*loadafter;
 
 	cpy = data->imgs;
 	mlx_clear_window(data->prog->mlx, data->prog->win);
 	while (cpy->type != NULLT)
 	{
-		mlx_put_image_to_window(data->prog->mlx, data->prog->win, cpy->img, cpy->x * SIZE, cpy->y * SIZE);
+		if (cpy->type == SPAWN)
+			loadafter = cpy;
+		else
+			mlx_put_image_to_window(data->prog->mlx, data->prog->win, cpy->img, cpy->x * SIZE, cpy->y * SIZE);
 		cpy++;
 	}
+	mlx_put_image_to_window(data->prog->mlx, data->prog->win, loadafter->img, loadafter->x * SIZE, loadafter->y * SIZE);
 }
 
 int	main(int argc, char **argv)
@@ -238,13 +238,14 @@ int	main(int argc, char **argv)
 	prog.mlx = mlx_init();
 	if (prog.mlx == NULL)
 		return (0);
-	prog.win = mlx_new_window(prog.mlx, get_list_xlen(list) * SIZE, get_list_ylen(list) * SIZE, "test");
+	prog.win = mlx_new_window(prog.mlx, get_list_xlen(list) * SIZE, get_list_ylen(list) * SIZE, "So Looongg v0.1 by Syden_");
 	if (prog.mlx == NULL)
 		return (0);
 	t_img *imgs = malloc(((node_size(argv[1]) * 2) + 1) * sizeof(t_node));
 	if (!imgs)
 		exit_error("Failed malloc allocation", &prog, list, reader);
 	imgs = load_images(imgs, list, &prog);
+	
 	t_data data;
 	data.prog = &prog;
 	data.imgs = imgs;

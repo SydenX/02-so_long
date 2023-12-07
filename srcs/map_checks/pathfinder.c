@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 20:43:28 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/07 10:54:28 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/07 15:42:29 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	check_precisely(t_node current, t_node *list, int x, int y)
 {
 	t_node	newnode;
 
-	newnode = get_node_at(list, x, y);
+	newnode = *get_node_at(list, x, y);
 	if (newnode.x == 0 || newnode.y == 0)
 		return (0);
 	if (newnode.type == EXIT)

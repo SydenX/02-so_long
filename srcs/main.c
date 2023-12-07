@@ -6,7 +6,7 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/06 15:32:09 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/06 20:44:43 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,67 +79,7 @@ t_node	*read_map(int fd, int fc, char *reader, t_node *list)
 		}
 	}
 	list[j] = create_node(1, 0, 0);
-	return (check_nodes_type(list, j));
-}
-
-void	pathf_setup_H(t_node *list)
-{
-	t_node	exit;
-	t_node	*cpy;
-	int		xDiff;
-	int		yDiff;
-
-	exit = find_exit_point(list);
-	cpy = list;
-	while (cpy->type != NULLT)
-	{
-		if (cpy->type == FLOOR || cpy->type == COLLECTIBLE)
-		{
-			xDiff = absolute(cpy->x - exit.x);
-			yDiff = absolute(cpy->y - exit.y);
-			cpy->h = xDiff + yDiff;
-		}
-		cpy++;
-	}
-}
-
-int	check_precisely(t_node current, t_node *list, int x, int y)
-{
-	t_node newnode;
-
-	newnode = get_node_at(list, x, y);
-	if (newnode.x == 0 || newnode.y == 0)
-		return (0);
-	if (newnode.type == EXIT)
-		return (1);
-	if (newnode.f > 0)
-		return (0);
-	newnode.g = current.g + 1;
-	newnode.f = newnode.h + newnode.g;
-	update_node(newnode, list);
-	if (newnode.type == FLOOR || newnode.type == COLLECTIBLE)
-		return (check_arround(newnode, list));
-	return (0);
-}
-
-int	check_arround(t_node node, t_node *list)
-{	
-	if (check_precisely(node, list, node.x, node.y + 1) == 0
-		&& check_precisely(node, list, node.x, node.y - 1) == 0
-		&& check_precisely(node, list, node.x + 1, node.y) == 0
-		&& check_precisely(node , list, node.x - 1, node.y) == 0)
-		return (0);
-	return (1);
-}
-
-void	pathf_run(t_node *list)
-{
-	t_node 	spawn;
-	int		lstsize;
-
-	spawn = find_spawn_point(list);
-	lstsize = get_list_size(list);
-	printf("%d", check_arround(spawn, list));
+	return (free(reader), check_nodes_type(list, j));
 }
 
 int	main(int argc, char **argv)

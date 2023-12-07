@@ -6,7 +6,7 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/06 15:26:01 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/06 20:49:33 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int		linesize_checks(char *reader);
 void	exit_error(char *error, t_prog *prog, void *toFree, void *toFree2);
 void	error_surrounded_by_walls(void *toFree, void *toFree2);
 void	error_notcorrectinterest(void *toFree, void *toFree2);
+void	error_nopathfound(void *toFree, void *toFree2);
 int		surr_checks(char *reader);
 int		surr_check_firstline(char *reader);
 int		rgb_to_hex(int red, int green, int blue);
@@ -68,5 +69,7 @@ t_node	get_node_at(t_node *list, int x, int y);
 int		get_list_size(t_node *list);
 int		check_arround(t_node node, t_node *list);
 int		update_node(t_node node, t_node *list);
+void	pathf_run(t_node *list);
+void	pathf_setup_h(t_node *list);
 
 #endif

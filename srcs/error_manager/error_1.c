@@ -6,7 +6,7 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:10:07 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/06 12:19:23 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/06 20:27:41 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	exit_error(char *error, t_prog *prog, void *toFree, void *toFree2)
 {
-    if (toFree)
-        free(toFree);
-    if (toFree2)
-        free(toFree2);
+	if (toFree)
+		free(toFree);
+	if (toFree2)
+		free(toFree2);
 	if (prog != NULL)
 	{
 		if (prog->mlx != NULL && prog->win != NULL)
@@ -45,3 +45,7 @@ void	error_notcorrectinterest(void *toFree, void *toFree2)
 	exit_error("Map doesn't contains the interest points needed.", NULL, toFree, toFree2);
 }
 
+void	error_nopathfound(void *toFree, void *toFree2)
+{
+	exit_error("Map is not possible to finish, collectibles or exit not reachable.", NULL, toFree, toFree2);
+}

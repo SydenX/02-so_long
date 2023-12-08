@@ -6,7 +6,7 @@
 /*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 13:49:43 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 19:09:46 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/08 12:49:48 by jetol            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,23 @@
 
 int	close_window(t_data *data)
 {
+	t_img	*imgsc;
 
+	// imgsc = data->imgs;
+	// while (imgsc != NULLT)
+	// {
+	// 	mlx_destroy_image(data->prog->mlx, imgsc->img);
+	// 	imgsc++;
+	// }
+	// free(imgsc->img);
+	
 	mlx_clear_window(data->prog->mlx, data->prog->win);
 	mlx_destroy_window(data->prog->mlx, data->prog->win);
 	free(data->imgs);
 	free(data->nodes);
 	free(data->prog->mlx);
+	free(data->prog->win);
+	free(data->prog);
 	exit(0);
 	return (1);
 }
@@ -62,8 +73,10 @@ int	is_node_free(int x, int y, t_data *data)
 void	move_player(int key, t_data *data)
 {
 	t_img	*oldimg;
+	t_img	moved;
 
 	oldimg = get_player_image(data);
+	moved = *oldimg;
 	if ((key == KEY_W || key == KEY_UP)
 		&& is_node_free(oldimg->x, oldimg->y - 1, data) == 1)
 		oldimg->y -= 1;
@@ -76,9 +89,14 @@ void	move_player(int key, t_data *data)
 	else if ((key == KEY_D || key == KEY_RIGHT)
 		&& is_node_free(oldimg->x + 1, oldimg->y, data) == 1)
 		oldimg->x += 1;
-	mlx_destroy_image(data->prog->mlx, oldimg->img);
-	oldimg->img = get_image(data->prog, SPAWN);
-	map_init(data);
+	if (moved.y != oldimg->y || moved.x != oldimg->x)
+	{
+		data->moves++;
+		mlx_destroy_image(data->prog->mlx, oldimg->img);
+		free(oldimg->img);
+		oldimg->img = get_image(data->prog, SPAWN);
+		map_init(data);
+	}
 }
 
 int	event_key_pressed(int keycode, t_data *data)
@@ -136,6 +154,7 @@ void map_init(t_data *data)
 {
 	t_img	*cpy;
 	t_img	*loadafter;
+	char	*moves;
 
 	cpy = data->imgs;
 	mlx_clear_window(data->prog->mlx, data->prog->win);
@@ -147,7 +166,12 @@ void map_init(t_data *data)
 			mlx_put_image_to_window(data->prog->mlx, data->prog->win, cpy->img, cpy->x * SIZE, cpy->y * SIZE);
 		cpy++;
 	}
+	moves = ft_itoa(data->moves);
+	if (!moves)
+		exit_error("Failed malloc allocation", data->prog, data, NULL);
 	mlx_put_image_to_window(data->prog->mlx, data->prog->win, loadafter->img, loadafter->x * SIZE, loadafter->y * SIZE);
+	mlx_string_put(data->prog->mlx, data->prog->win, 15, 15, 1, moves);
+	free(moves);
 }
 
 int	main(int argc, char **argv)
@@ -184,7 +208,8 @@ int	main(int argc, char **argv)
 	data.prog = &prog;
 	data.imgs = imgs;
 	data.nodes = list;
-
+	data.moves = 0;
+	
 	map_init(&data);
 	mlx_hook(prog.win, 17, 0, &close_window, &data);
 	mlx_hook(prog.win, 2, 0, &event_key_pressed, &data);

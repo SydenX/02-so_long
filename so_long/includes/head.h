@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/11 12:55:06 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 13:30:40 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	map_init(t_data *data);
 int		close_window(t_data *data);
 //UTILS
 int		collectibles_left(t_img *list);
-void	exit_custom(char *msg, t_data *data, char *prefix);
+void	exit_win(char *msg, t_data *data, char *prefix);
 int		absolute(int i);
 void	move_player(int key, t_data *data);
 int		event_key_pressed(int keycode, t_data *data);

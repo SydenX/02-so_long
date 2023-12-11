@@ -6,15 +6,15 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:53:57 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/11 12:59:21 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 13:33:10 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "head.h"
 
-void	exit_custom(char *msg, t_data *data, char *prefix)
+void	exit_win(char *msg, t_data *data, char *prefix)
 {
-	ft_printf("%s\n%s\n", prefix, msg);
+	ft_printf("%s\n%s\nNumber of moves: %d\n", prefix, msg, data->moves + 1);
 	close_window(data);
 }
 

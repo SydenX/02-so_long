@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:13:16 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 16:17:39 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 11:51:36 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,27 @@ int	get_list_ylen(t_node *list)
 		cpy++;
 	}
 	return (lasty + 1);
+}
+
+int	is_node_free(int x, int y, t_data *data)
+{
+	t_node	*node;
+	t_img	*img;
+
+	node = get_node_at(data->nodes, x, y);
+	if (node->type == FLOOR || node->type == SPAWN)
+		return (1);
+	if (node->type == EXIT && !collectibles_left(data->imgs))
+		close_window(data);
+	if (node->type == COLLECTIBLE)
+	{
+		img = get_img_at(data->imgs, x, y, 0);
+		img->type = FLOOR;
+		mlx_destroy_image(data->prog->mlx, img->img);
+		img->img = get_image(data->prog, FLOOR);
+		return (1);
+	}
+	if (node->type == WALL)
+		return (0);
+	return (0);
 }

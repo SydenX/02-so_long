@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   linesize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/05 16:56:10 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/06 15:02:41 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/11 11:56:22 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	linesize_checks(char *reader)
 	{
 		fline++;
 		if (reader[++i] == 0)
-			exit_error("Error, the map format is not correct.", NULL, NULL, NULL);
+			exit_error("Map format is not correct.", NULL, NULL, NULL);
 	}
 	while (reader[i] != 0)
 	{
@@ -36,7 +36,7 @@ int	linesize_checks(char *reader)
 			i++;
 		}
 		if (newline != fline)
-			exit_error("Error, map lines are not with the same size.", NULL, NULL, NULL);
+			exit_error("Map lines are not at same size.", NULL, NULL, NULL);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 20:43:28 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/07 15:42:29 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:26:44 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	reset_node(t_node *list)
 
 void	pathf_run(t_node *list)
 {
-	t_node	spawn;
 	t_node	*cpy;
 	int		lstsize;
 	int		checked;

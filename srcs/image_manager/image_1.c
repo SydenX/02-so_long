@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:03:09 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/07 16:18:52 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:23:08 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,24 @@ void	*get_image(t_prog *prog, t_type type)
 	int	img_height;
 
 	if (type == WALL)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/MegaTree.xpm", &img_width, &img_height));
+		return (mlx_xpm_file_to_image(prog->mlx,
+				"img/MegaTree.xpm", &img_width, &img_height));
 	if (type == WALL)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Bush.xpm", &img_width, &img_height));
+		return (mlx_xpm_file_to_image(prog->mlx,
+				"img/Bush.xpm", &img_width, &img_height));
 	if (type == COLLECTIBLE)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Mushroom.xpm", &img_width, &img_height));
+		return (mlx_xpm_file_to_image(prog->mlx,
+				"img/Mushroom.xpm", &img_width, &img_height));
 	if (type == EXIT)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Exit.xpm", &img_width, &img_height));
+		return (mlx_xpm_file_to_image(prog->mlx,
+				"img/Exit.xpm", &img_width, &img_height));
 	if (type == SPAWN)
-		return (mlx_xpm_file_to_image(prog->mlx, "img/Ruin.xpm", &img_width, &img_height));
+		return (mlx_xpm_file_to_image(prog->mlx,
+				"img/Player.xpm", &img_width, &img_height));
 	if (type == NULLT)
 		return (NULL);
-	return (mlx_xpm_file_to_image(prog->mlx, "img/Grass.xpm", &img_width, &img_height));
+	return (mlx_xpm_file_to_image(prog->mlx,
+			"img/Grass.xpm", &img_width, &img_height));
 }
 
 t_img	create_image(int x, int y, t_type type, t_prog *prog)

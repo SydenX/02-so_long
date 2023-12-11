@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   head.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/08 12:14:39 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/11 12:31:23 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <stdlib.h>
 # include <string.h>
 # include <fcntl.h>
-#include <stdio.h>
 
 # define SIZE 64
 
@@ -62,10 +61,13 @@ typedef struct s_data {
 
 //MAIN
 void 	map_init(t_data *data);
+int	close_window(t_data *data);
 //UTILS
 int		collectibles_left(t_img *list);
 int		rgb_to_hex(int red, int green, int blue);
 int		absolute(int i);
+void	move_player(int key, t_data *data);
+int	event_key_pressed(int keycode, t_data *data);
 //PATHFINDER
 void	pathf_run(t_node *list);
 void	pathf_setup_h(t_node *list);
@@ -104,5 +106,10 @@ int		update_node(t_node node, t_node *list);
 int		get_list_size(t_node *list);
 int		get_list_xlen(t_node *list);
 int		get_list_ylen(t_node *list);
+int		is_node_free(int x, int y, t_data *data);
+//MAP_INIT
+int		do_map_checks(int fd, char *reader);
+t_node	*read_map(int fd, int fc, char *reader, t_node *list);
+void	map_init(t_data *data);
 
 #endif

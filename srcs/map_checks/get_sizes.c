@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_sizes.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jetol <jetol@student.42.fr>                +#+  +:+       +#+        */
+/*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 11:12:20 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/06 12:23:55 by jetol            ###   ########.fr       */
+/*   Updated: 2023/12/11 12:32:51 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,16 @@ int	node_size(char *path)
 	return (wc + 1);
 }
 
+int	ext_match(const char *name)
+{
+	size_t	nl;
+	size_t	el;
+
+	nl = ft_strlen(name);
+	el = ft_strlen(".ber");
+	return (nl >= el && !strcmp(name + nl - el, ".ber"));
+}
+
 int	file_chars(char *path)
 {
 	char	reader[1];
@@ -46,6 +56,8 @@ int	file_chars(char *path)
 	int		fd;
 	int		wc;
 
+	if (ext_match(path) == 0)
+		exit_error("File is not '.ber' type.", NULL, NULL, NULL);
 	wc = 0;
 	readable = 1;
 	fd = open(path, O_RDONLY, 0);

@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/11 12:31:23 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:55:06 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,19 @@ typedef struct s_img {
 typedef struct s_data {
 	t_prog	*prog;
 	t_node	*nodes;
-	t_img 	*imgs;
+	t_img	*imgs;
 	int		moves;
 }	t_data;
 
 //MAIN
-void 	map_init(t_data *data);
-int	close_window(t_data *data);
+void	map_init(t_data *data);
+int		close_window(t_data *data);
 //UTILS
 int		collectibles_left(t_img *list);
-int		rgb_to_hex(int red, int green, int blue);
+void	exit_custom(char *msg, t_data *data, char *prefix);
 int		absolute(int i);
 void	move_player(int key, t_data *data);
-int	event_key_pressed(int keycode, t_data *data);
+int		event_key_pressed(int keycode, t_data *data);
 //PATHFINDER
 void	pathf_run(t_node *list);
 void	pathf_setup_h(t_node *list);

@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 16:13:16 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/11 11:51:36 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:58:05 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ int	is_node_free(int x, int y, t_data *data)
 	if (node->type == FLOOR || node->type == SPAWN)
 		return (1);
 	if (node->type == EXIT && !collectibles_left(data->imgs))
-		close_window(data);
+		exit_custom("You have reached the exit with all mushrooms ! GG",
+			data, "VICTORY");
 	if (node->type == COLLECTIBLE)
 	{
 		img = get_img_at(data->imgs, x, y, 0);

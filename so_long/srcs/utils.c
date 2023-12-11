@@ -6,18 +6,16 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:53:57 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/11 11:52:26 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/11 12:59:21 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "head.h"
 
-int	rgb_to_hex(int red, int green, int blue)
+void	exit_custom(char *msg, t_data *data, char *prefix)
 {
-	int	hex;
-
-	hex = red * 65536 + green * 256 + blue;
-	return (hex);
+	ft_printf("%s\n%s\n", prefix, msg);
+	close_window(data);
 }
 
 int	absolute(int i)

@@ -6,7 +6,7 @@
 #    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/11 12:48:57 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/11 12:45:39 by jtollena         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,17 +36,13 @@ LINKS = -I libft -L libft \
 	gcc $(FLAGS) -Ilibft -Imlx -I $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJECTS) $(INCLUDES)
-	make -C libft/
 	gcc $(OBJECTS) -Llibft -Lmlx -lft -lmlx -framework OpenGL -framework AppKit -o $(NAME)
 
 clean:
 	rm $(OBJECTS)
-	make -C libft/ clean
 
-fclean:
-	rm $(OBJECTS)
+fclean: clean
 	rm $(NAME)
-	make -C libft/ fclean
 
 re: fclean $(NAME)
 

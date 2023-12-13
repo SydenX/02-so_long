@@ -6,7 +6,7 @@
 #    By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 13:47:45 by jtollena          #+#    #+#              #
-#    Updated: 2023/12/11 13:29:34 by jtollena         ###   ########.fr        #
+#    Updated: 2023/12/12 13:50:49 by jtollena         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SOURCES = srcs/main.c \
 			srcs/map_checks/nodestype.c \
 			srcs/map_checks/get_sizes.c \
 			srcs/map_checks/pathfinder.c \
+			srcs/map_checks/pathfinder_arround.c \
 			srcs/map_checks/map_init.c \
 			srcs/node_manager/node_1.c \
 			srcs/node_manager/node_utils.c \

@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/06 20:43:28 by jetol             #+#    #+#             */
-/*   Updated: 2023/12/11 12:26:44 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/12 13:49:20 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,6 @@ void	pathf_setup_h(t_node *list)
 		cpy->h = xdiff + ydiff;
 		cpy++;
 	}
-}
-
-int	check_precisely(t_node current, t_node *list, int x, int y)
-{
-	t_node	newnode;
-
-	newnode = *get_node_at(list, x, y);
-	if (newnode.x == 0 || newnode.y == 0)
-		return (0);
-	if (newnode.type == EXIT)
-		return (1);
-	if (newnode.f > 0)
-		return (0);
-	newnode.g = current.g + 1;
-	newnode.f = newnode.h + newnode.g;
-	update_node(newnode, list);
-	if (newnode.type == FLOOR || newnode.type == COLLECTIBLE)
-		return (check_arround(newnode, list));
-	return (0);
-}
-
-int	check_arround(t_node node, t_node *list)
-{
-	if (check_precisely(node, list, node.x, node.y + 1) == 0
-		&& check_precisely(node, list, node.x, node.y - 1) == 0
-		&& check_precisely(node, list, node.x + 1, node.y) == 0
-		&& check_precisely(node, list, node.x - 1, node.y) == 0)
-		return (0);
-	return (1);
 }
 
 void	reset_node(t_node *list)
@@ -87,6 +58,13 @@ void	pathf_run(t_node *list)
 			checked = check_arround(*cpy, list);
 			if (checked == 0)
 				error_nopathfound(list, NULL);
+			if (cpy->type == COLLECTIBLE)
+			{
+				reset_node(list);
+				checked = check_arround_tospawn(*cpy, list);
+				if (checked == 0)
+					error_nopathfound(list, NULL);
+			}
 			reset_node(list);
 		}
 		cpy++;

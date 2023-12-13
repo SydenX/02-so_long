@@ -6,7 +6,7 @@
 /*   By: jtollena <jtollena@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/30 14:56:19 by jtollena          #+#    #+#             */
-/*   Updated: 2023/12/11 13:30:40 by jtollena         ###   ########.fr       */
+/*   Updated: 2023/12/12 13:49:40 by jtollena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,11 @@ int		event_key_pressed(int keycode, t_data *data);
 //PATHFINDER
 void	pathf_run(t_node *list);
 void	pathf_setup_h(t_node *list);
+//PATHFINDER_ARROUND
 int		check_arround(t_node node, t_node *list);
+int		check_precisely(t_node current, t_node *list, int x, int y);
+int		check_arround_tospawn(t_node node, t_node *list);
+int		check_precisely_tospawn(t_node current, t_node *list, int x, int y);
 //NODESTYPE
 t_node	*check_nodes_type(t_node *nodes, int size);
 //LINESIZE
